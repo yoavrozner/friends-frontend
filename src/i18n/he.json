@@ -3,7 +3,8 @@
   "profile": "פרופיל אישי",
   "createGroup": "צור קבוצה חדשה",
   "myRequests": "הבקשות שלי",
-  "searchGroup": "חפש קבוצה",
+  "searchGroup": "חיפוש קבוצה",
   "defaultUserName": "משתמש",
+  "searchGroupLabel": "הכנס שם של קבוצה או היררכיה נדרשת...",
   "hello": "שלום"
 }
