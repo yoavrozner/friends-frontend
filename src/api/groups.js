@@ -63,7 +63,8 @@ export async function getGroupById(id) {
         owner: {
             displayName: "3dfdvsd"
         },
-        type: "security"
+        type: "security",
+        members: [{ displayName: "ssss/ssdasd/dsasdf", sAMAccountName: "t4rdgw@eggfd" }, { displayName: "erwe/errewr/dsasdf", sAMAccountName: "dfsasf@eggfd" }]
     }
     return group;
 }

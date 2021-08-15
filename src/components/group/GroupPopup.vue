@@ -8,8 +8,28 @@
       <p class="group-info">
         {{ $t("groupAttendees") }}: {{ group.attendees }}
       </p>
+      <v-simple-table>
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th>{{ $t("name") }}</th>
+              <th>{{ $t("mail") }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="member in group.members" :key="member.sAMAccountName">
+              <td>{{ member.displayName }}</td>
+              <td>{{ member.sAMAccountName }}</td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
       <v-card-actions id="actions">
-        <IconButton icon="mdi-account-plus" color="orange" :tooltip="$t('join')" />
+        <IconButton
+          icon="mdi-account-plus"
+          color="orange"
+          :tooltip="$t('join')"
+        />
       </v-card-actions>
     </v-card>
   </v-dialog>

@@ -41,8 +41,8 @@ import * as groupsApi from "@/api/groups.js";
 
 import Header from "@/components/common/Header";
 import Search from "@/components/inputs/Search";
-import GroupPopup from "@/components/groups/GroupPopup";
-import Group from "@/components/groups/Group";
+import GroupPopup from "@/components/group/GroupPopup";
+import Group from "@/components/group/Group";
 
 export default {
   name: "Groups",
@@ -90,6 +90,7 @@ export default {
 .type-header {
   font-size: 25px;
   text-align: right;
+  padding: 5px;
 }
 .type-groups-container {
   display: flex;
