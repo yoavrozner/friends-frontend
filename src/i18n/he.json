@@ -1,3 +1,9 @@
 {
-  "welcome": "ברוכים הבאים ל-Friends!"
+  "welcome": "ברוכים הבאים ל-Friends!",
+  "profile": "פרופיל אישי",
+  "createGroup": "צור קבוצה חדשה",
+  "myRequests": "הבקשות שלי",
+  "searchGroup": "חפש קבוצה",
+  "defaultUserName": "משתמש",
+  "hello": "שלום"
 }

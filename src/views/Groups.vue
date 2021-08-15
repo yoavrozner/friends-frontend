@@ -1,5 +1,7 @@
 <template>
-  <div></div>
+  <div>
+    <Header :txt="$t('searchGroups')" />
+  </div>
 </template>
 
 <script>

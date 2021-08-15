@@ -1,22 +1,37 @@
 <template>
   <div>
-    <h1 id="header">{{ $t("welcome") }}</h1>
-    <div id="links-container"></div>
+    <Header :txt="$t('welcome')" />
+    <div id="links-container">
+      <LinkButton color="#9AB6EA" path="/profile" :txt="$t('profile')" />
+      <LinkButton color="#B5DE99" path="/groups" :txt="$t('searchGroup')" />
+      <LinkButton color="#FFBD8D" path="/requests" :txt="$t('myRequests')" />
+      <LinkButton
+        color="#FFE66F"
+        path="/create-group"
+        :txt="$t('createGroup')"
+      />
+    </div>
   </div>
 </template>
 
 <script>
+import LinkButton from "@/components/common/LinkButton";
+import Header from "@/components/common/Header";
+
 export default {
   name: "Home",
+  components: { LinkButton, Header },
 };
 </script>
 
 <style scoped>
-#header {
-  margin-top: 30px;
-  font-size: 40px;
-}
 #links-container {
   display: grid;
+  padding: 100px;
+  column-gap: 30px;
+  row-gap: 30px;
+  justify-content: center;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
 }
 </style>
