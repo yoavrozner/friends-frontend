@@ -5,8 +5,9 @@
     :label="label"
     clearable
     append-icon="mdi-magnify"
-    @keyup.enter.native="$emit('enter', value)"
-    @click:append="$emit('enter', value)"
+    @keyup.enter.native="$emit('search', value)"
+    @click:append="$emit('search', value)"
+    @click:clear="$emit('clear')"
   ></v-text-field>
 </template>
 

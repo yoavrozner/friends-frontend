@@ -9,6 +9,7 @@
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/i18n/**/*.json\""
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "js-base64": "^3.6.1",
     "js-cookie": "^3.0.0",

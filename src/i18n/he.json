@@ -6,5 +6,10 @@
   "searchGroup": "חיפוש קבוצה",
   "defaultUserName": "משתמש",
   "searchGroupLabel": "הכנס שם של קבוצה או היררכיה נדרשת...",
-  "hello": "שלום"
+  "hello": "שלום",
+  "groupName": "שם הקבוצה",
+  "groupOwner": "מנהל הקבוצה",
+  "groupAttendees": "מספר משתתפים",
+  "securityGroups": "קבוצות אבטחה",
+  "distributionGroups": "קבוצות דואר"
 }
