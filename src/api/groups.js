@@ -59,6 +59,7 @@ export async function getGroupById(id) {
         id,
         displayName: "aaa",
         classification: "aaaaa",
+        attendees: 3,
         owner: {
             displayName: "3dfdvsd"
         },

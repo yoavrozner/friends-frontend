@@ -16,6 +16,7 @@
             v-for="group in securityGroups"
             :key="group.id"
             :group="group"
+            @click="onGroupClick"
           />
         </div>
       </div>
@@ -26,10 +27,12 @@
             v-for="group in distributionGroups"
             :key="group.id"
             :group="group"
+            @click="onGroupClick"
           />
         </div>
       </div>
     </div>
+    <GroupPopup ref="details" />
   </div>
 </template>
 
@@ -38,11 +41,12 @@ import * as groupsApi from "@/api/groups.js";
 
 import Header from "@/components/common/Header";
 import Search from "@/components/inputs/Search";
+import GroupPopup from "@/components/groups/GroupPopup";
 import Group from "@/components/groups/Group";
 
 export default {
   name: "Groups",
-  components: { Header, Search, Group },
+  components: { Header, Search, Group, GroupPopup },
   data() {
     return {
       securityGroups: [],
@@ -60,6 +64,10 @@ export default {
     async getGroup(id) {
       const group = await groupsApi.getGroupById(id);
       return group;
+    },
+    async onGroupClick(id) {
+      const group = await this.getGroup(id);
+      this.$refs.details.open(group);
     },
     onClear() {
       this.securityGroups = [];
