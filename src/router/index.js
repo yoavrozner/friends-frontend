@@ -1,10 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Profile from '../views/Profile.vue'
-import Groups from '../views/Groups.vue'
-import Requests from '../views/Requests.vue'
-import CreateGroup from '../views/CreateGroup.vue'
 
 Vue.use(VueRouter)
 
@@ -17,22 +13,22 @@ const routes = [
   {
     path: '/profile',
     name: 'Profile',
-    component: () => import(Profile)
+    component: () => import("@/views/Profile.vue")
   },
   {
     path: '/groups',
     name: 'Groups',
-    component: () => import(Groups)
+    component: () => import("@/views/Groups.vue")
   },
   {
     path: '/requests',
     name: 'Requests',
-    component: () => import(Requests)
+    component: () => import("@/views/Requests.vue")
   },
   {
     path: '/create-group',
     name: 'CreateGroup',
-    component: () => import(CreateGroup)
+    component: () => import("@/views/CreateGroup.vue")
   }
 ]
 
