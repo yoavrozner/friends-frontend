@@ -1,5 +1,5 @@
 <template>
-  <div id="select" @select="$emit('select', value)">
+  <div id="select" @select="$emit('select', value)" :rules="rules ? rules : []">
     <v-select v-model="value" :items="items" :label="label" solo></v-select>
   </div>
 </template>
@@ -7,7 +7,7 @@
 <script>
 export default {
   name: "Select",
-  props: ["label", "items"],
+  props: ["label", "items", "rules"],
   data() {
     return {
       value: undefined,

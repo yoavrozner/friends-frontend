@@ -1,12 +1,12 @@
 <template>
   <div>
-    <Header :txt="$t('createGroup')" />
+    <Header :txt="$t('pages.createGroup')" />
     <GroupForm @complete="onComplete" />
   </div>
 </template>
 
 <script>
-import Header from "@/components/common/Header";
+import Header from "@/components/common/text/Header";
 import GroupForm from "@/components/group/GroupForm";
 
 export default {
@@ -20,5 +20,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

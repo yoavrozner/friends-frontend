@@ -1,45 +1,31 @@
 <template>
   <div>
-    <Header :txt="$t('searchGroup')" />
+    <Header :txt="$t('pages.searchGroup')" />
     <div id="search-container">
-      <Search
-        :label="$t('searchGroupLabel')"
-        @search="onSearch"
-        @clear="onClear"
-      />
+      <Search :label="$t('groups.searchGroupLabel')" @search="onSearch" @clear="onClear" />
     </div>
     <div id="groups-container">
       <div v-if="securityGroups.length" class="type-container">
         <p class="type-header">{{ $t("securityGroups") }}</p>
         <div class="type-groups-container">
-          <Group
-            v-for="group in securityGroups"
-            :key="group.id"
-            :group="group"
-            @click="onGroupClick"
-          />
+          <Group v-for="group in securityGroups" :key="group.id" :group="group" @click="onGroupClick" />
         </div>
       </div>
       <div v-if="distributionGroups.length" class="type-container">
         <p class="type-header">{{ $t("distributionGroups") }}</p>
         <div class="type-groups-container">
-          <Group
-            v-for="group in distributionGroups"
-            :key="group.id"
-            :group="group"
-            @click="onGroupClick"
-          />
+          <Group v-for="group in distributionGroups" :key="group.id" :group="group" @click="onGroupClick" />
         </div>
       </div>
     </div>
-    <GroupPopup ref="details" />
+    <GroupPopup ref="groupDetails" />
   </div>
 </template>
 
 <script>
-import * as groupsApi from "@/api/groups.js";
+import * as groupsApi from "@/api/group";
 
-import Header from "@/components/common/Header";
+import Header from "@/components/common/text/Header";
 import Search from "@/components/inputs/Search";
 import GroupPopup from "@/components/group/GroupPopup";
 import Group from "@/components/group/Group";
@@ -57,9 +43,7 @@ export default {
     async onSearch(value) {
       const groups = await groupsApi.searchGroups(value);
       this.securityGroups = groups.filter((group) => group.type === "security");
-      this.distributionGroups = groups.filter(
-        (group) => group.type === "distribution"
-      );
+      this.distributionGroups = groups.filter((group) => group.type === "distribution");
     },
     async getGroup(id) {
       const group = await groupsApi.getGroupById(id);
@@ -67,7 +51,7 @@ export default {
     },
     async onGroupClick(id) {
       const group = await this.getGroup(id);
-      this.$refs.details.open(group);
+      this.$refs.groupDetails.open(group);
     },
     onClear() {
       this.securityGroups = [];
