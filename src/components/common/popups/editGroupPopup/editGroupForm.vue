@@ -12,26 +12,20 @@
       />
       <FormInput
         :label="$t('group.sAMAccountName')"
-        :placeholder="$t('groupNamePlaceholder')"
-        :startValue="group.sAMAccountName.split('_')[0]"
+        :startValue="group.sAMAccountName"
         :readonly="!canEditGroupName() || !edit"
         :reset="resetGroupName"
-        @input="prefixGroupName = $event"
-        :inputChecker="true"
-        :rules="requiredRules"
-        :hint="groupName"
-        restrictPattern="^[a-zA-Z0-9_]*$"
-        :validator="checkValidation"
-        :error="!isGroupNameValid"
       />
-      <!-- todo: change owner -->
-      <FormInput
+      <Autocomplete
+        icon
+        background="white"
         :label="$t('group.owner')"
         :placeholder="$t('ownerPlaceholder')"
-        @input="displayName = $event"
-        :startValue="group.owner.displayName"
-        :readonly="!edit"
-        :reset="resetOwnerName"
+        :items="users"
+        :isLoading="isLoading"
+        :minLength="2"
+        @select="onOwnerSelect"
+        @type="getUsersByName"
       />
       <div id="edit-group">
         <SubmitButton
@@ -70,10 +64,18 @@
       </div>
       <hr />
       <div class="members-update" id="members-remove">
-        <Chips :users="group.members" @remove="onMemberRemove" :label="$t('group.members')" />
+        <Chips
+          :users="group.members"
+          @remove="onMemberRemove"
+          :label="$t('group.members')"
+        />
       </div>
     </v-form>
-    <NotePopup ref="notePopup" @complete="onMemberAddComplete" :note="$t('notes.member')" />
+    <NotePopup
+      ref="notePopup"
+      @complete="onMemberAddComplete"
+      :note="$t('notes.member')"
+    />
   </div>
 </template>
 
@@ -119,24 +121,35 @@ export default {
       requiredRules: [(v) => !!v || this.$t("group.create.required")],
       displayNameRules: [
         (v) => !!v || this.$t("group.create.required"),
-        (v) => v.length <= this.limitDisplayName || this.$t("group.create.displayNameLimit"),
+        (v) =>
+          v.length <= this.limitDisplayName ||
+          this.$t("group.create.displayNameLimit"),
       ],
     };
   },
   methods: {
-    onInputGroupName: debounce(async function() {
-      if (typeof this.prefixGroupName === "string" && this.prefixGroupName.length >= this.minLimitGroupName) {
+    onInputGroupName: debounce(async function () {
+      if (
+        typeof this.prefixGroupName === "string" &&
+        this.prefixGroupName.length >= this.minLimitGroupName
+      ) {
         const group = await groupApi.getGroupById(this.groupName);
-        group.sAMAccountName === this.groupName ? (this.isGroupNameValid = false) : (this.isGroupNameValid = true);
+        group.sAMAccountName === this.groupName
+          ? (this.isGroupNameValid = false)
+          : (this.isGroupNameValid = true);
       }
     }, 100),
     getGroupName() {
-      this.groupName = `${this.prefixGroupName}_${ClassificationTypeSuffixGroupName(
+      this.groupName = `${
+        this.prefixGroupName
+      }_${ClassificationTypeSuffixGroupName(
         this.group.classification
       )}_${GroupTypeSuffixGroupName(this.group.type)}`;
     },
     checkValidation() {
-      return this.isGroupNameValid ? null : this.$t("group.create.groupNameAlreadyExists");
+      return this.isGroupNameValid
+        ? null
+        : this.$t("group.create.groupNameAlreadyExists");
     },
     onReset() {
       this.isLoading = false;
@@ -181,17 +194,26 @@ export default {
       this.edit = false;
 
       if (this.displayName) {
-        const newName = await groupApi.updateGroupDisplayName(this.group.id, this.displayName);
+        const newName = await groupApi.updateGroupDisplayName(
+          this.group.id,
+          this.displayName
+        );
         if (!newName) this.resetDisplayName = true;
       }
 
       if (this.prefixGroupName) {
-        const newName = await groupApi.updateGroupName(this.group.id, this.prefixGroupName);
+        const newName = await groupApi.updateGroupName(
+          this.group.id,
+          this.prefixGroupName
+        );
         if (!newName) this.resetGroupName = true;
       }
 
       if (this.owner) {
-        const newOwner = await groupApi.updateGroupOwner(this.group.id, this.owner);
+        const newOwner = await groupApi.updateGroupOwner(
+          this.group.id,
+          this.owner
+        );
         if (!newOwner) this.resetOwnerName = true;
       }
     },
@@ -208,8 +230,16 @@ export default {
     onUserSelect(user) {
       this.users = [];
       if (!user) return;
-      else if (this.isUserExists(this.selectedUsers, user.id)) this.remove(user);
+      else if (this.isUserExists(this.selectedUsers, user.id))
+        this.remove(user);
       else this.selectedUsers.push(user);
+    },
+    onOwnerSelect(user) {
+      this.users = [];
+      if (!user) return;
+      else if (this.isUserExists(this.selectedUsers, user.id))
+        this.remove(user);
+      else this.selectedUsers = [user];
     },
     onUserRemove(item) {
       this.selectedUsers = this.selectedUsers.filter((user) => {
