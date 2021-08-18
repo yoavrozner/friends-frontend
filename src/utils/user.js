@@ -1,3 +1,5 @@
+import store from '@/store';
+
 export function formatKartoffelUser(user) {
   const formatedUser = user;
   formatedUser.displayName = `${user.firstName} ${user.lastName ? user.lastName : ""} > ${user.hierarchyFlat}`;
@@ -11,6 +13,13 @@ export function formatADUser(user) {
 }
 
 export function getUserLimitMembers() {
-  // TODO: implement
-  return 100;
+  const isApprover = store.getters.isApprover;
+  const isSuper = store.getters.isSuper;
+  if (isSuper) {
+    return Infinity;
+  } else if (isApprover) {
+    return 1000;
+  } else {
+    return 100;
+  }
 }

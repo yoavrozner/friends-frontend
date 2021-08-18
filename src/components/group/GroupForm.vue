@@ -55,7 +55,7 @@
       <Chips :users="selectedUsers" @remove="onUserRemove" />
     </div>
 
-    <div v-if="!isApprover" id="approver">
+    <div v-if="!isApprover && !isSuper" id="approver">
       <Autocomplete
         icon
         background="white"
@@ -78,7 +78,7 @@
       id="send-button"
       color="#2c3448"
       :label="$t('send')"
-      :disabled="!valid || checkValidationMembers() != null || !isGroupNameValid"
+      :disabled="!valid || checkValidationMembers() != null || !isGroupNameValid || approvers < 1"
       @click="onComplete"
     />
   </v-form>
@@ -105,7 +105,7 @@ export default {
   name: "GroupForm",
   components: { FormInput, Select, Radio, SubmitButton, Autocomplete, Chips },
   computed: {
-    ...mapGetters(["isApprover", "user", "limitDisplayName", "minLimitGroupName"]),
+    ...mapGetters(["isApprover", "isSuper", "user", "limitDisplayName", "minLimitGroupName"]),
   },
   data() {
     return {
@@ -227,7 +227,7 @@ export default {
         classification: this.classification,
         displayName: `${this.hierarchy}/${this.displayName}`,
         members: this.members,
-        approver: this.isApprover ? this.user.id : this.approver,
+        approver: this.isApprover || this.isSuper ? this.user.id : this.approver,
       };
 
       if (this.isSecurityGroup()) {
