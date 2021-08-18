@@ -6,12 +6,14 @@ const state = {
   token: cookies.get("kd-token") || undefined,
   user: { hierarchyFlat: "מפקדת אסם/ ענף חטיפים/ מדור מלוחים", name: { firstName: "נטע" } },
   isApprover: false,
+  isSuper: false,
 };
 
 const getters = {
   isAuthenticated: (state) => !!state.token && !!state.user,
   user: (state) => state.user,
   isApprover: (state) => state.isApprover,
+  isSuper: (state) => state.isSuper,
 };
 
 const actions = {
@@ -29,9 +31,12 @@ const actions = {
     commit("setToken", undefined);
   },
   async getApproverInfo({ commit }) {
-    await usersApi.isApprover().then((isApprover) => {
-      commit("setIsApprover", isApprover);
-    });
+    const isApprover = await usersApi.isApprover();
+    commit("setIsApprover", isApprover);
+  },
+  async getSuperInfo({ commit }) {
+    const isSuper = await usersApi.isSuper();
+    commit("setIsSuper", isSuper);
   },
   async parseToken({ commit, dispatch }) {
     try {
@@ -59,6 +64,7 @@ const actions = {
       commit("setUser", user);
 
       dispatch("getApproverInfo");
+      dispatch("getSuperInfo");
     } catch (err) {
       dispatch("onError", err);
     }
@@ -72,6 +78,9 @@ const mutations = {
   },
   setIsApprover: (state, isApprover) => {
     state.isApprover = isApprover;
+  },
+  setIsSuper: (state, isSuper) => {
+    state.isSuper = isSuper;
   },
 };
 

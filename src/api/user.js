@@ -71,6 +71,20 @@ export async function isApprover() {
 }
 
 /**
+ * isSuperUser checks if the user is admin
+ * */
+export async function isSuperUser() {
+  // try {
+  //   const res = await Axios.get(`${baseURL}/api/user/super`);
+  //   return res.data;
+  // } catch (error) {
+  //   store.dispatch("onError", error);
+  // }
+
+  return true;
+}
+
+/**
  * searchApproverByName gets all the approvers with the received name
  * @param name is the name of the approver
  */
