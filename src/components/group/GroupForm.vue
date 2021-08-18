@@ -78,7 +78,7 @@
       id="send-button"
       color="#2c3448"
       :label="$t('send')"
-      :disabled="!valid || checkValidationMembers() != null || !isGroupNameValid"
+      :disabled="!valid || checkValidationMembers() != null || !isGroupNameValid || approvers < 1"
       @click="onComplete"
     />
   </v-form>
