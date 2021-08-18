@@ -1,8 +1,8 @@
 <template>
   <v-card id="group" @click="$emit('click', group.id)">
     <h3 id="group-name">{{ group.displayName }}</h3>
-    <p>{{ $t("groupOwner") }}: {{ group.owner.displayName }}</p>
-    <p>{{ $t("groupAttendees") }}: {{ group.attendees }}</p>
+    <p>{{ $t("group.owner") }}: {{ group.owner.displayName }}</p>
+    <p>{{ $t("group.attendeesNumber") }}: {{ group.attendees }}</p>
   </v-card>
 </template>
 
@@ -15,9 +15,9 @@ export default {
 
 <style scoped>
 #group {
-  width: 250px;
-  height: 150px;
-  font-size: 18px;
+  width: 300px;
+  height: 170px;
+  font-size: 13px;
   text-align: right;
   padding: 20px;
   margin: 10px;
