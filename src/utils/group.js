@@ -46,3 +46,12 @@ export function formatGroup(group) {
 
   return group;
 }
+
+export function isOwner(group, user) {
+  return group.owner.sAMAccountName === user.sAMAccountName
+}
+
+export function isMember(group, user) {
+  return group.members.some((member) => {member.sAMAccountName === user.sAMAccountName})
+
+}

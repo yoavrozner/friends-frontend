@@ -21,26 +21,34 @@
         </template>
       </v-simple-table>
       <v-card-actions id="actions">
-        <IconButton icon="mdi-account-plus" color="orange" :tooltip="$t('groups.join')" @click="onJoinClick" />
+        <IconButton v-if="joinGroup()" icon="mdi-account-plus" color="orange" :tooltip="$t('groups.join')" @click="onJoinClick" />
+        <IconButton v-if="groupInfo() && !joinGroup()" icon="mdi-pencil-outline" color="orange" :tooltip="$t('groups.moreInfo')" @click="onInfoClick" />
       </v-card-actions>
     </v-card>
     <JoinPopup ref="groupJoin" />
+    <EditGroupPopup ref="groupInfo" />
   </v-dialog>
 </template>
 
 <script>
 import IconButton from "@/components/common/button/IconButton";
 import JoinPopup from "./JoinGroupPopup.vue";
+import { mapGetters } from "vuex";
+import EditGroupPopup from "@/components/common/popups/editGroupPopup/editGroupPopup.vue";
+import { isOwner, isMember } from "@/utils/group"; 
 
 export default {
   name: "GroupPopup",
+  computed: {
+    ...mapGetters(["user"]),
+  },
   data() {
     return {
       dialog: false,
       group: undefined,
     };
   },
-  components: { IconButton, JoinPopup },
+  components: { IconButton, JoinPopup, EditGroupPopup },
   methods: {
     open(group) {
       this.group = group;
@@ -49,6 +57,16 @@ export default {
     onJoinClick() {
       this.dialog = false;
       this.$refs.groupJoin.open(this.group);
+    },
+    onInfoClick() {
+      this.dialog = false;
+      this.$refs.groupInfo.open(this.group);
+    },
+    joinGroup() {
+      return !isOwner(this.group, this.user) && !isMember(this.group, this.user)
+    },
+    groupInfo() {
+      return isOwner(this.group, this.user)
     },
   },
 };
