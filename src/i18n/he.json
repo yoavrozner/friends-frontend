@@ -17,6 +17,8 @@
     "joinRequest": "שליחת בקשה להצטרפות",
     "moreInfo": "פרטים נוספים",
     "deleteDistributionGroup": "מחק תפוצת דואר",
+    "deleteDistributionGroupAlert": "האם אתה בטוח שברצונך למחוק תפוצת דואר זו?",
+    "deleteDistributionGroupConfirm": "כן, אני בטוח",
     "edit": "עריכת קבוצה",
     "save": "שמירת שינויים"
   },

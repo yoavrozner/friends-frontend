@@ -4,7 +4,7 @@ import { Base64 } from "js-base64";
 
 const state = {
   token: cookies.get("kd-token") || undefined,
-  user: { hierarchyFlat: "מפקדת אסם/ ענף חטיפים/ מדור מלוחים", name: { firstName: "נטע" }, mail: "maya@gmail.com" },
+  user: undefined,
   isApprover: false,
   isSuper: false,
 };

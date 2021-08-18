@@ -1,86 +1,111 @@
 <template>
-  <v-form id="form" v-model="valid">
-    <FormInput
-      :label="$t('group.displayName')"
-      :placeholder="$t('displayNamePlaceholder')"
-      :startValue="group.name"
-      @input="displayName = $event"
-      :readonly="!edit"
-      :rules="displayNameRules"
-      :reset="resetDisplayName"
-    />
-    <FormInput
-      :label="$t('group.sAMAccountName')"
-      :startValue="group.sAMAccountName"
-      :readonly="!canEditGroupName() || !edit"
-      :reset="resetGroupName"
-    />
-    <!-- todo: change owner -->
-    <FormInput
-      :label="$t('group.owner')"
-      :placeholder="$t('ownerPlaceholder')"
-      @input="displayName = $event"
-      :startValue="group.owner.displayName"
-      :readonly="!edit"
-      :reset="resetOwnerName"
-    />
-    <div id="edit-group">
-      <SubmitButton
-        :color="edit ? 'green' : 'blue'"
-        :icon="edit ? 'mdi-content-save-outline' : 'mdi-circle-edit-outline'"
-        :label="edit ? $t('groups.save') : $t('groups.edit')"
-        @click="edit ? onSave() : onEdit()"
-        fontsize="13px"
-        :disabled="edit && !valid"
+  <div>
+    <v-form id="form" v-model="valid">
+      <FormInput
+        :label="$t('group.displayName')"
+        :placeholder="$t('displayNamePlaceholder')"
+        :startValue="group.name"
+        @input="displayName = $event"
+        :readonly="!edit"
+        :rules="displayNameRules"
+        :reset="resetDisplayName"
       />
-    </div>
-    <!-- TODO: MEMBERS -->
-    <hr />
-    <div class="members-update">
-      <Autocomplete
-        icon
-        background="white"
-        :label="$t('membersLabel')"
-        :placeholder="$t('membersPlaceholder')"
-        :items="users"
-        :isLoading="isLoading"
-        :minLength="2"
-        @select="onUserSelect"
-        @type="getUsersByName"
+      <FormInput
+        :label="$t('group.sAMAccountName')"
+        :placeholder="$t('groupNamePlaceholder')"
+        :startValue="group.sAMAccountName.split('_')[0]"
+        :readonly="!canEditGroupName() || !edit"
+        :reset="resetGroupName"
+        @input="prefixGroupName = $event"
+        :inputChecker="true"
+        :rules="requiredRules"
+        :hint="groupName"
+        restrictPattern="^[a-zA-Z0-9_]*$"
+        :validator="checkValidation"
+        :error="!isGroupNameValid"
       />
-      <Chips :users="selectedUsers" @remove="onUserRemove" />
-      <div id="edit-group" v-if="selectedUsers.length > 0">
+      <!-- todo: change owner -->
+      <FormInput
+        :label="$t('group.owner')"
+        :placeholder="$t('ownerPlaceholder')"
+        @input="displayName = $event"
+        :startValue="group.owner.displayName"
+        :readonly="!edit"
+        :reset="resetOwnerName"
+      />
+      <div id="edit-group">
         <SubmitButton
-          color="blue"
-          :icon="'mdi-account-plus-outline'"
-          :label="$t('membersLabel')"
-          @click="onMemberAdd"
+          :color="edit ? 'green' : 'blue'"
+          :icon="edit ? 'mdi-content-save-outline' : 'mdi-circle-edit-outline'"
+          :label="edit ? $t('groups.save') : $t('groups.edit')"
+          @click="edit ? onSave() : onEdit()"
           fontsize="13px"
+          :disabled="edit && !valid"
         />
       </div>
-    </div>
-    <hr />
-    <div class="members-update" id="members-remove">
-      <Chips :users="group.members" @remove="onMemberRemove" :label="$t('group.members')" />
-    </div>
-  </v-form>
+      <!-- TODO: MEMBERS -->
+      <hr />
+      <div class="members-update">
+        <Autocomplete
+          icon
+          background="white"
+          :label="$t('membersLabel')"
+          :placeholder="$t('membersPlaceholder')"
+          :items="users"
+          :isLoading="isLoading"
+          :minLength="2"
+          @select="onUserSelect"
+          @type="getUsersByName"
+        />
+        <Chips :users="selectedUsers" @remove="onUserRemove" />
+        <div id="edit-group" v-if="selectedUsers.length > 0">
+          <SubmitButton
+            color="blue"
+            :icon="'mdi-account-plus-outline'"
+            :label="$t('membersLabel')"
+            @click="onMemberAdd"
+            fontsize="13px"
+          />
+        </div>
+      </div>
+      <hr />
+      <div class="members-update" id="members-remove">
+        <Chips :users="group.members" @remove="onMemberRemove" :label="$t('group.members')" />
+      </div>
+    </v-form>
+    <NotePopup ref="notePopup" @complete="onMemberAddComplete" :note="$t('notes.member')" />
+  </div>
 </template>
 
 <script>
+import * as joinApi from "@/api/join";
 import * as usersApi from "@/api/user";
 import * as groupApi from "@/api/group";
+import debounce from "lodash/debounce";
 import Chips from "@/components/common/text/BaseChips";
 import FormInput from "@/components/common/inputs/FormInput";
 import SubmitButton from "@/components/common/button/SubmitButton";
 import Autocomplete from "@/components/common/inputs/BaseAutocomplete";
+import NotePopup from "@/components/common/popups/NotePopup.vue";
+
 import { isSecurityGroup } from "@/utils/group";
+import { ClassificationTypeSuffixGroupName } from "@/utils/classification";
+import { GroupTypeSuffixGroupName } from "@/utils/group";
+import { mapGetters } from "vuex";
 
 export default {
   name: "EditGroupForm",
-  components: { FormInput, SubmitButton, Chips, Autocomplete },
+  components: { FormInput, SubmitButton, Chips, Autocomplete, NotePopup },
   props: ["group", "reset"],
+  computed: {
+    ...mapGetters(["limitDisplayName", "minLimitGroupName"]),
+  },
   data() {
     return {
+      displayName: "",
+      prefixGroupName: "",
+      groupName: "",
+      isGroupNameValid: true,
       isLoading: false,
       users: [],
       selectedUsers: [],
@@ -90,15 +115,29 @@ export default {
       edit: false,
       valid: false,
       owner: "",
-      displayName: "",
       members: [],
+      requiredRules: [(v) => !!v || this.$t("group.create.required")],
       displayNameRules: [
         (v) => !!v || this.$t("group.create.required"),
-        (v) => v.length <= 20 || this.$t("group.create.displayNameLimit"),
+        (v) => v.length <= this.limitDisplayName || this.$t("group.create.displayNameLimit"),
       ],
     };
   },
   methods: {
+    onInputGroupName: debounce(async function() {
+      if (typeof this.prefixGroupName === "string" && this.prefixGroupName.length >= this.minLimitGroupName) {
+        const group = await groupApi.getGroupById(this.groupName);
+        group.sAMAccountName === this.groupName ? (this.isGroupNameValid = false) : (this.isGroupNameValid = true);
+      }
+    }, 100),
+    getGroupName() {
+      this.groupName = `${this.prefixGroupName}_${ClassificationTypeSuffixGroupName(
+        this.group.classification
+      )}_${GroupTypeSuffixGroupName(this.group.type)}`;
+    },
+    checkValidation() {
+      return this.isGroupNameValid ? null : this.$t("group.create.groupNameAlreadyExists");
+    },
     onReset() {
       this.isLoading = false;
       this.users = [];
@@ -124,14 +163,13 @@ export default {
       this.$emit("complete", group);
     },
     onMemberRemove(item) {
-      console.log(item);
-      // this.selectedUsers = this.selectedUsers.filter((user) => {
-      //   return user.id !== item.id;
-      // });
+      groupApi.deleteGroupMember(this.group.id, item.sAMAccountName);
     },
     onMemberAdd(item) {
-      // TODO: add make sure popup
-      console.log(item);
+      this.$refs.notePopup.open(item);
+    },
+    onMemberAddComplete(request) {
+      joinApi.approveJoinRequest(request.id);
     },
     onEdit() {
       this.edit = true;
@@ -145,6 +183,16 @@ export default {
       if (this.displayName) {
         const newName = await groupApi.updateGroupDisplayName(this.group.id, this.displayName);
         if (!newName) this.resetDisplayName = true;
+      }
+
+      if (this.prefixGroupName) {
+        const newName = await groupApi.updateGroupName(this.group.id, this.prefixGroupName);
+        if (!newName) this.resetGroupName = true;
+      }
+
+      if (this.owner) {
+        const newOwner = await groupApi.updateGroupOwner(this.group.id, this.owner);
+        if (!newOwner) this.resetOwnerName = true;
       }
     },
     getUsersByName(name) {
@@ -171,10 +219,15 @@ export default {
   },
   updated() {
     this.resetDisplayName = false;
+    this.resetGroupName = true;
   },
   watch: {
     reset(val) {
       if (val) this.onReset();
+    },
+    prefixGroupName() {
+      this.getGroupName();
+      this.onInputGroupName();
     },
   },
 };

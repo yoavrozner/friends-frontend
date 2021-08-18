@@ -22,6 +22,7 @@
           />
         </v-card-actions>
       </div>
+      <DeleteGroupPopup ref="deleteGroup" />
     </v-card>
   </v-dialog>
 </template>
@@ -29,11 +30,12 @@
 <script>
 import EditGroupForm from "./editGroupForm";
 import SubmitButton from "@/components/common/button/SubmitButton";
+import DeleteGroupPopup from "./deleteGroupPopup";
 import { isDistributionGroup } from "@/utils/group";
 
 export default {
   name: "EditGroupPopup",
-  components: { SubmitButton, EditGroupForm },
+  components: { SubmitButton, EditGroupForm, DeleteGroupPopup },
 
   data() {
     return {
@@ -50,6 +52,7 @@ export default {
       this.dialog = true;
     },
     onDelete() {
+      this.$refs.deleteGroup.open(this.group);
       this.dialog = false;
     },
   },

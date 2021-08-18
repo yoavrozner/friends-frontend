@@ -32,7 +32,7 @@
         @input="prefixGroupName = $event"
         :inputChecker="true"
         :required="true"
-        :rules="groupNameRules"
+        :rules="requiredRules"
         :hint="groupName"
         restrictPattern="^[a-zA-Z0-9_]*$"
         :validator="checkValidation"
@@ -132,7 +132,6 @@ export default {
         (v) => !!v || this.$t("group.create.required"),
         (v) => v.length <= this.limitDisplayName || this.$t("group.create.displayNameLimit"),
       ],
-      groupNameRules: [(v) => !!v || this.$t("group.create.required")],
     };
   },
   watch: {
@@ -159,7 +158,6 @@ export default {
       return this.type === GroupTypeEnum.security;
     },
     getGroupName() {
-      console.log(this.prefixGroupName);
       this.groupName = `${this.prefixGroupName}_${ClassificationTypeSuffixGroupName(
         this.classification
       )}_${GroupTypeSuffixGroupName(this.type)}`;

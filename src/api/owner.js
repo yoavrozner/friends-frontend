@@ -1,9 +1,6 @@
-/* eslint-disable no-unused-vars */
 import Axios from "axios";
 import store from "@/store";
-import requests from "@/objects/owner";
 import { baseURL } from "@/config";
-import { RequestTypeEnum } from "@/utils/request";
 import { formatOwnerRequests } from "@/utils/owner";
 /**
  * createOwnerRequest for change owner to group
@@ -11,47 +8,41 @@ import { formatOwnerRequests } from "@/utils/owner";
  * @param {string} ownerId - new owner id
  **/
 export async function createOwnerRequest({ groupId, ownerId }) {
-  // try {
-  //   const res = await Axios.post(`${baseURL}/api/owner/request`, {
-  //     groupId,
-  //     approverId,
-  //   });
-  //   return res.data;
-  // } catch (error) {
-  //   store.dispatch("onError", error);
-  // }
-
-  return groupId;
+  try {
+    const res = await Axios.post(`${baseURL}/api/owner/request`, {
+      groupId,
+      ownerId,
+    });
+    return res.data;
+  } catch (error) {
+    store.dispatch("onError", error);
+  }
 }
 
 /**
  * getOwnerRequestByCreator - get owner requests by creator
  * */
 export async function getOwnerRequestByCreator() {
-  // try {
-  //   const res = await Axios.get(`${baseURL}/api/owner/requests/creator`);
-  //   return res.data;
-  // } catch (error) {
-  //   store.dispatch("onError", error);
-  // }
-
-  const requestsFormatted = formatOwnerRequests(requests);
-  return requestsFormatted;
+  try {
+    const res = await Axios.get(`${baseURL}/api/owner/requests/creator`);
+    const requestsFormatted = formatOwnerRequests(res.data);
+    return requestsFormatted;
+  } catch (error) {
+    store.dispatch("onError", error);
+  }
 }
 
 /**
  * getOwnerRequestByApprover - get owner requests by approver
  * */
 export async function getOwnerRequestByApprover() {
-  // try {
-  //   const res = await Axios.get(`${baseURL}/api/owner/requests/approver`);
-  //   return res.data;
-  // } catch (error) {
-  //   store.dispatch("onError", error);
-  // }
-
-  const requestsFormatted = formatOwnerRequests(requests);
-  return requestsFormatted;
+  try {
+    const res = await Axios.get(`${baseURL}/api/owner/requests/approver`);
+    const requestsFormatted = formatOwnerRequests(res.data);
+    return requestsFormatted;
+  } catch (error) {
+    store.dispatch("onError", error);
+  }
 }
 
 /**
@@ -59,14 +50,12 @@ export async function getOwnerRequestByApprover() {
  * @param {string} ownerReqId - owner request id
  * */
 export async function denyJoinRequest(ownerReqId) {
-  // try {
-  //   const res = await Axios.put(`${baseURL}/api/owner/deny/:ownerReqId`);
-  //   return res.data;
-  // } catch (error) {
-  //   store.dispatch("onError", error);
-  // }
-
-  return ownerReqId;
+  try {
+    const res = await Axios.put(`${baseURL}/api/owner/deny/${ownerReqId}`);
+    return res.data;
+  } catch (error) {
+    store.dispatch("onError", error);
+  }
 }
 
 /**
@@ -74,12 +63,10 @@ export async function denyJoinRequest(ownerReqId) {
  * @param {string} ownerReqId - owner request id
  * */
 export async function approveOwnerRequest(ownerReqId) {
-  // try {
-  //   const res = await Axios.put(`${baseURL}/api/owner/approve/:ownerReqId`);
-  //   return res.data;
-  // } catch (error) {
-  //   store.dispatch("onError", error);
-  // }
-
-  return ownerReqId;
+  try {
+    const res = await Axios.put(`${baseURL}/api/owner/approve/${ownerReqId}`);
+    return res.data;
+  } catch (error) {
+    store.dispatch("onError", error);
+  }
 }

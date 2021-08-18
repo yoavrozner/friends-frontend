@@ -9,10 +9,10 @@ const groups = [
       { displayName: "רמד מתוקים", sAMAccountName: "ddk@services.idf" },
     ],
     owner: { displayName: "מאיה", sAMAccountName: "maya" },
-    type: "distribution",
+    type: "security",
   },
   {
-    sAMAccountName: "MeluhimMefakdim_ops_DG@services.idf",
+    sAMAccountName: "maya_purpleM_SG",
     displayName: "מפקדת אסם/ ענף חטיפים/ מדור מלוחים/תפוצת מפקדים מנהלי",
     name: "תפוצת מפקדים מנהלי",
     members: [
@@ -22,7 +22,7 @@ const groups = [
     ],
     owner: { displayName: "רמד מלוחים" },
     type: "security",
-    classification: "administrative",
+    classification: "limitedPurple",
   },
   {
     displayName: "עלית/ תפוצת מתוקים",

@@ -60,28 +60,24 @@ export async function searchUsersByName(name) {
  * isApprover checks if the user is an approver
  * */
 export async function isApprover() {
-  // try {
-  //   const res = await Axios.get(`${baseURL}/api/user/approver`);
-  //   return res.data;
-  // } catch (error) {
-  //   store.dispatch("onError", error);
-  // }
-
-  return true;
+  try {
+    const res = await Axios.get(`${baseURL}/api/user/approver`);
+    return res.data;
+  } catch (error) {
+    store.dispatch("onError", error);
+  }
 }
 
 /**
  * isSuperUser checks if the user is admin
  * */
 export async function isSuperUser() {
-  // try {
-  //   const res = await Axios.get(`${baseURL}/api/user/super`);
-  //   return res.data;
-  // } catch (error) {
-  //   store.dispatch("onError", error);
-  // }
-
-  return true;
+  try {
+    const res = await Axios.get(`${baseURL}/api/user/super`);
+    return res.data;
+  } catch (error) {
+    store.dispatch("onError", error);
+  }
 }
 
 /**
