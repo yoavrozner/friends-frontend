@@ -22,8 +22,33 @@
     <template v-slot:item.sAMAccountName="{ item }">
       <BaseTooltip :value="item.sAMAccountName" />
     </template>
+    <template v-slot:item.groupName="{ item }">
+      <BaseTooltip :value="item.groupName" />
+    </template>
     <template v-slot:item.edit="{ item }">
-      <SubmitButton :item="item" label="פרטים נוספים" color="#00b0f0" fontsize="14px" @click="$emit('edit', item)" />
+      <SubmitButton
+        :item="item"
+        :label="$t('groups.moreInfo')"
+        color="#00b0f0"
+        fontsize="14px"
+        @click="$emit('edit', item)"
+      />
+    </template>
+    <template v-slot:item.approve="{ item }">
+      <SubmitButton
+        :item="item"
+        :label="$t('request.approve')"
+        color="green"
+        fontsize="14px"
+        @click="$emit('approve', item)"
+      />
+      <SubmitButton
+        :item="item"
+        :label="$t('request.deny')"
+        color="red"
+        fontsize="14px"
+        @click="$emit('deny', item)"
+      />
     </template>
   </v-data-table>
 </template>

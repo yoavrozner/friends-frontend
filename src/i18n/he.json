@@ -28,7 +28,11 @@
     "members": "משתתפים",
     "classification": {
       "title": "סיווג",
-      "options": { "blue": "כחול", "limitedPurple": "סגול מצומצם", "administrative": "מנהלי" }
+      "options": {
+        "blue": { "label": "כחול", "value": "blue", "suffix": "blue" },
+        "limitedPurple": { "label": "סגול מצומצם", "value": "limitedPurple", "suffix": "purpleM" },
+        "administrative": { "label": "מנהלי", "value": "administrative", "suffix": "ops" }
+      }
     },
     "create": {
       "required": "שדה חובה",
@@ -44,7 +48,7 @@
     "tabs": {
       "myRequest": {
         "name": "בקשות שהגשתי",
-        "color": "#9AB6EA",
+        "color": "#B5DE99",
         "headers": [
           { "text": "תאריך בקשה", "value": "createdAt" },
           { "text": "סטטוס", "value": "status" },
@@ -68,7 +72,7 @@
       },
       "myGroups": {
         "name": "הקבוצות שלי",
-        "color": "#B5DE99",
+        "color": "#f0e3aa",
         "headers": [
           { "text": "סיווג", "value": "classification" },
           { "text": "סוג הקבוצה", "value": "type" },
@@ -80,6 +84,51 @@
     }
   },
   "request": {
+    "tabs": {
+      "join": {
+        "name": "הצטרפות לקבוצה",
+        "color": "#ddaaf0",
+        "headers": [
+          { "text": "תאריך בקשה", "value": "createdAt" },
+          { "text": "מס' משתתפים", "value": "attendees" },
+          { "text": "סיווג", "value": "classification" },
+          { "text": "סוג קבוצה", "value": "type" },
+          { "text": "שם מבקש", "value": "creator" },
+          { "text": "שם הקבוצה", "value": "sAMAccountName" },
+          { "text": "פרטי הבקשה", "value": "joinReason" },
+          { "text": "", "value": "approve" }
+        ]
+      },
+      "create": {
+        "limit": true,
+        "name": "יצירת קבוצה",
+        "color": "#9AB6EA",
+        "headers": [
+          { "text": "תאריך בקשה", "value": "createdAt" },
+          { "text": "מס' משתתפים", "value": "attendees" },
+          { "text": "סיווג", "value": "classification" },
+          { "text": "סוג קבוצה", "value": "type" },
+          { "text": "מנהל", "value": "owner" },
+          { "text": "שם הקבוצה", "value": "groupName" },
+          { "text": "שם תצוגה", "value": "displayName" },
+          { "text": "", "value": "approve" }
+        ]
+      },
+      "owner": {
+        "name": "ניהול קבוצה",
+        "color": "#aadcf0",
+        "headers": [
+          { "text": "תאריך בקשה", "value": "createdAt" },
+          { "text": "מס' משתתפים", "value": "attendees" },
+          { "text": "סיווג", "value": "classification" },
+          { "text": "סוג קבוצה", "value": "type" },
+          { "text": "מנהל", "value": "owner.displayName" },
+          { "text": "שם הקבוצה", "value": "sAMAccountName" },
+          { "text": "שם תצוגה", "value": "displayName" },
+          { "text": "", "value": "approve" }
+        ]
+      }
+    },
     "status": {
       "pending": "בהמתנה",
       "approved": "מאושר",
@@ -90,22 +139,62 @@
       "join": "הצטרפות",
       "create": "יצירה",
       "owner": "העברת בעלות"
-    }
+    },
+    "approve": "אשר",
+    "deny": "דחה"
   },
   "autocomplete": {
     "noResult": "אין תוצאות"
+  },
+  "notes": {
+    "owner": {
+      "title": "שים לב!",
+      "subtitle": "הנך עומד להיות מנהל קבוצה",
+      "terms": "באחריותך לוודא כי:",
+      "marks": [
+        "כלל החברים בקבוצה הינם מורשים לחומרים העוברים בקבוצה",
+        "כלל החברים חשופים לחומרים העוברים בקבוצה",
+        "במידה והקבוצה מכילה חומרי שו'ס, עלייך לוודא כי כלל החברים חשופים"
+      ],
+      "lastTerm": "כל צירוף לקבוצה והשלכות בגין מעשה זה הינו באחריותך כמנהל הקבוצה",
+      "agree": "כן אני מבין"
+    },
+    "addOwner": {
+      "title": "שים לב!",
+      "subtitle": "הנך עומד להוסיף מנהל קבוצה",
+      "terms": "באחריותך לוודא כי:",
+      "marks": [
+        "כלל החברים בקבוצה הינם מורשים לחומרים העוברים בקבוצה",
+        "כלל החברים חשופים לחומרים העוברים בקבוצה",
+        "במידה והקבוצה מכילה חומרי שו'ס, עלייך לוודא כי כלל החברים חשופים"
+      ],
+      "lastTerm": "כל צירוף לקבוצה והשלכות בגין מעשה זה הינו באחריותך כמנהל הקבוצה",
+      "agree": "כן אני מבין"
+    },
+    "member": {
+      "title": "שים לב!",
+      "subtitle": "הנך עומד להוסיף משתמש לקבוצה",
+      "terms": "באחריותך לוודא כי:",
+      "marks": [
+        "המבקש הינו מורשה לחומרים העוברים בקבוצה",
+        "המבקש הינו חשוף לחומרים העוברים בקבוצה",
+        "במידה והקבוצה מכילה חומרי שו'ס, עלייך לוודא כי המבקש חשוף"
+      ],
+      "lastTerm": "כל צירוף לקבוצה והשלכות בגין מעשה זה הינו באחריותך כמנהל הקבוצה",
+      "agree": "כן אני מאשר"
+    }
   },
   "search": "חיפוש",
   "refresh": "רענון",
   "error": "שגיאה",
   "approverLabel": "גורם מאשר",
-  "securityGroups": "קבוצות אבטחה",
-  "distributionGroups": "תפוצת מייל",
+  "securityGroups": { "name": "קבוצות אבטחה", "suffix": "SG" },
+  "distributionGroups": { "name": "תפוצת מייל", "suffix": "DG" },
   "unknown": "לא ידוע",
   "hierarchyLabel": "ההיררכיה שלי",
   "membersLabel": "הוספת משתמשים",
-  "hierarchyPlaceholder": "הכנס/י את ההיררכיה שלך...",
-  "displayNamePlaceholder": "הכנס/י שם לקבוצה שלך...",
+  "groupNamePlaceholder": "הכנס/י שם לקבוצה שלך...",
+  "displayNamePlaceholder": "הכנס/י שם תצוגה לקבוצה שלך...",
   "ownerPlaceholder": "חפש מנהל לקבוצה...",
   "membersPlaceholder": "חפש/י אנשים להוספה לקבוצה...",
   "approverPlaceholder": "חפש/י גורם מאשר ליצירת הקבוצה...",

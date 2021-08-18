@@ -1,5 +1,5 @@
 <template>
-  <v-radio-group v-model="value" @change="$emit('change', value)" :rules="rules ? rules : []">
+  <v-radio-group row v-model="value" @change="$emit('change', value)" :rules="rules ? rules : []">
     <v-radio v-for="item in items" :key="item.value" :label="item.label" :value="item.value"></v-radio>
   </v-radio-group>
 </template>

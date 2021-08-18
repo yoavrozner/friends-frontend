@@ -70,9 +70,9 @@
 import * as usersApi from "@/api/user";
 import * as groupApi from "@/api/group";
 import Chips from "@/components/common/text/BaseChips";
-import FormInput from "@/components/inputs/FormInput";
+import FormInput from "@/components/common/inputs/FormInput";
 import SubmitButton from "@/components/common/button/SubmitButton";
-import Autocomplete from "@/components/inputs/BaseAutocomplete";
+import Autocomplete from "@/components/common/inputs/BaseAutocomplete";
 import { isSecurityGroup } from "@/utils/group";
 
 export default {

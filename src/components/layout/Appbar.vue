@@ -1,7 +1,7 @@
 <template>
   <v-app-bar app id="header" height="86px">
     <div class="fit-height">
-      <router-link to="/" class="auto-margin">
+      <router-link to="/home" class="auto-margin">
         <img id="friends-logo" src="@/assets/logo.svg" />
       </router-link>
     </div>
@@ -49,7 +49,7 @@ export default {
   data() {
     return {
       pages: [
-        { title: "searchGroup", icon: "mdi-magnify", path: "/groups" },
+        { title: "searchGroup", icon: "mdi-magnify", path: "/" },
         { title: "createGroup", icon: "mdi-plus", path: "/create-group" },
         { title: "profile", icon: "mdi-account-outline", path: "/profile" },
         { title: "myRequests", icon: "mdi-bell-ring-outline", path: "/requests" },

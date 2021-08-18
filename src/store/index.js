@@ -8,6 +8,7 @@ import create from "./modules/create";
 import owner from "./modules/owner";
 import group from "./modules/group";
 import request from "./modules/request";
+import configuration from "./modules/configuration";
 
 Vue.use(Vuex);
 
@@ -15,6 +16,7 @@ export default new Vuex.Store({
   modules: {
     auth,
     dictionary,
+    configuration,
     error,
     join,
     create,

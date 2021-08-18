@@ -1,8 +1,10 @@
 /* eslint-disable no-unused-vars */
+import requests from "@/objects/join";
 import Axios from "axios";
 import store from "@/store";
 import { baseURL } from "@/config";
 import { RequestTypeEnum } from "@/utils/request";
+import { formatJoinRequests } from "@/utils/join";
 
 /**
  * createJoinRequest for joining group
@@ -36,47 +38,9 @@ export async function getJoinRequestByCreator() {
   //   store.dispatch("onError", error);
   // }
 
-  const requests = [
-    {
-      id: 4,
-      creator: "נטע שבירו",
-      approver: "רשצ טורטית",
-      groupId: "check@services.idf",
-      status: "Denied",
-      createdAt: "02.03.2021",
-      // todo: get group by id to get this fields
-      type: "security",
-      displayName: "מפקדת אסם/ ענף חטיפים/ מדור מתוקים/ תפוצת טורטית כחול",
-    },
-    {
-      id: 5,
-      creator: "נטע שבירו",
-      approver: "רשצ טורטית",
-      groupId: "check@services.idf",
-      status: "Approved",
-      createdAt: "04.03.2021",
-      // todo: get group by id to get this fields
-      type: "distribution",
-      displayName: "מפקדת אסם/ ענף חטיפים/ מדור מתוקים/ תפוצת טורטית כחול",
-    },
-    {
-      id: 6,
-      creator: "נטע שבירו",
-      approver: "רשצ טורטית",
-      groupId: "check@services.idf",
-      createdAt: "04.03.2021",
-      status: "Approved",
-      // todo: get group by id to get this fields
-      type: "security",
-      displayName: "מפקדת אסם/ ענף חטיפים/ מדור מתוקים/ תפוצת טורטית כחול",
-    },
-  ].map((request) => {
-    request.reqType = RequestTypeEnum.join;
-    return request;
-  });
+  const requestsDetail = await formatJoinRequests(requests);
 
-  // GET GROUP BY ID
-  return requests;
+  return requestsDetail;
 }
 
 /**
@@ -90,48 +54,8 @@ export async function getJoinRequestByApprover() {
   //   store.dispatch("onError", error);
   // }
 
-  const requests = [
-    {
-      id: 1,
-      creator: "נטע שבירו",
-      approver: "רשצ טורטית",
-      groupId: "check@services.idf",
-      status: "Denied",
-      createdAt: "02.03.2021",
-      // todo: get group by id to get this fields
-      type: "security",
-      displayName: "מפקדת אסם/ ענף חטיפים/ מדור מתוקים/ תפוצת טורטית כחול",
-    },
-    {
-      id: 2,
-      creator: "נטע שבירו",
-      approver: "רשצ טורטית",
-      groupId: "check@services.idf",
-      status: "Approved",
-      createdAt: "04.03.2021",
-      // todo: get group by id to get this fields
-      type: "distribution",
-      displayName: "מפקדת אסם/ ענף חטיפים/ מדור מתוקים/ תפוצת טורטית כחול",
-    },
-    {
-      id: 3,
-      creator: "נטע שבירו",
-      approver: "רשצ טורטית",
-      groupId: "check@services.idf",
-      createdAt: "04.03.2021",
-      status: "Approved",
-      // todo: get group by id to get this fields
-      type: "security",
-      displayName: "מפקדת אסם/ ענף חטיפים/ מדור מתוקים/ תפוצת טורטית כחול",
-    },
-  ].map((request) => {
-    request.reqType = RequestTypeEnum.join;
-    return request;
-  });
-
-  // GET GROUP BY ID
-
-  return requests;
+  const requestsDetail = await formatJoinRequests(requests);
+  return requestsDetail;
 }
 
 /**

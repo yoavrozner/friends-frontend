@@ -16,7 +16,7 @@ export default {
 
 <style scoped>
 #value {
-  width: 390px;
+  max-width: 390px;
   margin-right: 15px;
   overflow: hidden;
   text-overflow: ellipsis;

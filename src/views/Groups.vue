@@ -6,13 +6,13 @@
     </div>
     <div id="groups-container">
       <div v-if="securityGroups.length" class="type-container">
-        <p class="type-header">{{ $t("securityGroups") }}</p>
+        <p class="type-header">{{ $t("securityGroups.name") }}</p>
         <div class="type-groups-container">
           <Group v-for="group in securityGroups" :key="group.id" :group="group" @click="onGroupClick" />
         </div>
       </div>
       <div v-if="distributionGroups.length" class="type-container">
-        <p class="type-header">{{ $t("distributionGroups") }}</p>
+        <p class="type-header">{{ $t("distributionGroups.name") }}</p>
         <div class="type-groups-container">
           <Group v-for="group in distributionGroups" :key="group.id" :group="group" @click="onGroupClick" />
         </div>
@@ -26,7 +26,7 @@
 import * as groupsApi from "@/api/group";
 
 import Header from "@/components/common/text/Header";
-import Search from "@/components/inputs/Search";
+import Search from "@/components/common/inputs/Search";
 import GroupPopup from "@/components/group/GroupPopup";
 import Group from "@/components/group/Group";
 

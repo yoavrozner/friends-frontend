@@ -13,7 +13,7 @@
 <script>
 import Appbar from "@/components/layout/Appbar.vue";
 import Footer from "@/components/layout/Footer.vue";
-import ErrorSnackbar from "@/components/popups/ErrorSnackBar";
+import ErrorSnackbar from "@/components/common/popups/ErrorSnackBar";
 
 export default {
   name: "Layout",

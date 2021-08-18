@@ -4,7 +4,7 @@ import { Base64 } from "js-base64";
 
 const state = {
   token: cookies.get("kd-token") || undefined,
-  user: undefined,
+  user: { hierarchyFlat: "מפקדת אסם/ ענף חטיפים/ מדור מלוחים", name: { firstName: "נטע" } },
   isApprover: false,
 };
 
@@ -30,7 +30,6 @@ const actions = {
   },
   async getApproverInfo({ commit }) {
     await usersApi.isApprover().then((isApprover) => {
-      console.log("isApprover", isApprover);
       commit("setIsApprover", isApprover);
     });
   },
@@ -51,13 +50,15 @@ const actions = {
         throw new Error("token expired");
       }
 
+      user.hierarchyFlat = user.hierarchy.join("/");
       user = {
         ...user,
         approverInfos: {},
       };
 
       commit("setUser", user);
-      dispatch("getApproverInfo", user);
+
+      dispatch("getApproverInfo");
     } catch (err) {
       dispatch("onError", err);
     }

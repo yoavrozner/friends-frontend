@@ -21,7 +21,6 @@ export default {
 
 <style scoped>
 #confirm-button {
-  min-width: 100px;
   width: fit-content;
   height: 50px;
   line-height: 44px;

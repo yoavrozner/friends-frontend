@@ -3,6 +3,7 @@
     <div v-if="label" id="label">{{ label }}</div>
     <v-autocomplete
       v-model="item"
+      id="check"
       @input="onSelect"
       @update:search-input="onInput"
       @keyup.enter.native="onEnter"
@@ -18,6 +19,10 @@
       :background-color="background"
       :placeholder="placeholder"
       :class="{ disableInput: disabled }"
+      :prefix="prefix != null ? prefix : ''"
+      :suffix="suffix != null ? suffix : ''"
+      :hint="hint != null ? hint : ''"
+      :persistent-hint="hint != null ? hint : ''"
     >
       <template v-slot:no-data>
         <p id="no-resault">{{ validationFailedMsg ? validationFailedMsg : $t("autocomplete.noResult") }}</p>
@@ -46,7 +51,9 @@ export default {
     "disabled",
     "validation",
     "label",
-    "rules",
+    "prefix",
+    "suffix",
+    "hint",
   ],
   methods: {
     onSelect() {

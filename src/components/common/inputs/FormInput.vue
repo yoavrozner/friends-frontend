@@ -11,6 +11,11 @@
       :rules="rules != null ? rules : []"
       :disabled="readonly != null ? readonly : false"
       :prefix="prefix != null ? prefix : ''"
+      :hint="hint != null ? hint : ''"
+      :persistent-hint="hint != null"
+      :maxlength="maxlength != null ? maxlength : false"
+      :counter="maxlength != null"
+      @keydown="restrictCharacters"
     ></v-text-field>
   </div>
 </template>
@@ -18,7 +23,28 @@
 <script>
 export default {
   name: "FormInput",
-  props: ["label", "placeholder", "required", "rules", "startValue", "readonly", "solo", "filled", "reset", "prefix"],
+  props: [
+    "label",
+    "placeholder",
+    "required",
+    "rules",
+    "startValue",
+    "readonly",
+    "solo",
+    "filled",
+    "reset",
+    "prefix",
+    "hint",
+    "maxlength",
+    "restrictPattern",
+  ],
+  methods: {
+    restrictCharacters(e) {
+      if (this.restrictPattern && !e.key.match(this.restrictPattern)) {
+        e.preventDefault();
+      }
+    },
+  },
   data() {
     return {
       value: this.startValue ? this.startValue : "",

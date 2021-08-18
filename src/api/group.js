@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 import Axios from "axios";
 import store from "@/store";
+import groups from "@/objects/group";
 import { baseURL } from "@/config";
-import { getHierarchyFromDisplayNameAndName } from "@/utils/group";
+import { formatGroup } from "@/utils/group";
 
 /**
  * searchGroups - search groups (distribution and security)
@@ -30,53 +31,7 @@ export async function searchGroups(partialName) {
   //   store.dispatch("onError", error);
   // }
 
-  console.log(partialName);
-  const groups = [
-    {
-      sAMAccountName: "Meluhim_purpleM_SG@services.idf",
-      displayName: "מפקדת אסם/ ענף חטיפים/ מדור מלוחים/שיתוף מלוחים סמצ",
-      name: "שיתוף מלוחים סמצ",
-      classification: "limitedPurple",
-      members: [
-        { displayName: "רמד מלוחים", sAMAccountName: "ramad@services.idf" },
-        { displayName: "רמד מתוקים", sAMAccountName: "ddk@services.idf" },
-      ],
-      owner: { displayName: "רמד מלוחים", sAMAccountName: "ramad@services.idf" },
-      type: "distribution",
-    },
-    {
-      sAMAccountName: "MeluhimMefakdim_ops_DG@services.idf",
-      displayName: "מפקדת אסם/ ענף חטיפים/ מדור מלוחים/תפוצת מפקדים מנהלי",
-      name: "תפוצת מפקדים מנהלי",
-      members: [
-        { displayName: "רמד מלוחים", sAMAccountName: "ramad@services.idf" },
-        { displayName: "רמד מתוקים", sAMAccountName: "ddk@services.idf" },
-        { displayName: "רמד מתוקים", sAMAccountName: "ddk@services.idf" },
-      ],
-      owner: { displayName: "רמד מלוחים" },
-      type: "security",
-      classification: "administrative",
-    },
-    {
-      displayName: "עלית/ תפוצת מתוקים",
-      name: "תפוצת מתוקים",
-      members: [
-        { displayName: "רמד מלוחים", sAMAccountName: "ramad@services.idf" },
-        { displayName: "רמד מתוקים", sAMAccountName: "ddk@services.idf" },
-        { displayName: "רמד מתוקים", sAMAccountName: "ddk@services.idf" },
-        { displayName: "רמד מלוחים", sAMAccountName: "ramad@services.idf" },
-      ],
-      owner: { displayName: "עלית רמד מתוקים" },
-      type: "distribution",
-      classification: "blue",
-      sAMAccountName: "metukin_mail@d360",
-    },
-  ];
-
-  groups.map((group) => {
-    group.attendees = group.members.length;
-    return group;
-  });
+  groups.map((group) => formatGroup(group));
   return groups;
 }
 
@@ -92,20 +47,8 @@ export async function getGroupById(id) {
   //   store.dispatch("onError", error);
   // }
 
-  console.log(id);
-  const group = {
-    sAMAccountName: "Meluhim_purpleM_SG@services.idf",
-    displayName: "מפקדת אסם/ ענף חטיפים/ מדור מלוחים/שיתוף מלוחים סמצ",
-    name: "שיתוף מלוחים סמצ",
-    classification: "limitedPurple",
-    members: [
-      { displayName: "רמד מלוחים", sAMAccountName: "ramad@services.idf" },
-      { displayName: "רמד מתוקים", sAMAccountName: "ddk@services.idf" },
-    ],
-    owner: { displayName: "רמד מלוחים", sAMAccountName: "ramad@services.idf" },
-    type: "distribution",
-  };
-  group.attendees = group.members.length;
+  let group = groups[0];
+  group = formatGroup(group);
 
   return group;
 }
@@ -121,53 +64,7 @@ export async function getUserGroups() {
   //   store.dispatch("onError", error);
   // }
 
-  const groups = [
-    {
-      sAMAccountName: "Meluhim_purpleM_SG@services.idf",
-      displayName: "מפקדת אסם/ ענף חטיפים/ מדור מלוחים/שיתוף מלוחים סמצ",
-      name: "שיתוף מלוחים סמצ",
-      classification: "limitedPurple",
-      members: [
-        { displayName: "רמד מלוחים", sAMAccountName: "ramad@services.idf" },
-        { displayName: "רמד מתוקים", sAMAccountName: "ddk@services.idf" },
-      ],
-      owner: { displayName: "רמד מלוחים", sAMAccountName: "ramad@services.idf" },
-      type: "distribution",
-    },
-    {
-      sAMAccountName: "MeluhimMefakdim_ops_DG@services.idf",
-      displayName: "מפקדת אסם/ ענף חטיפים/ מדור מלוחים/תפוצת מפקדים מנהלי",
-      name: "תפוצת מפקדים מנהלי",
-      members: [
-        { displayName: "רמד מלוחים", sAMAccountName: "ramad@services.idf" },
-        { displayName: "רמד מתוקים", sAMAccountName: "ddk@services.idf" },
-        { displayName: "רמד מתוקים", sAMAccountName: "ddk@services.idf" },
-      ],
-      owner: { displayName: "רמד מלוחים" },
-      type: "security",
-      classification: "administrative",
-    },
-    {
-      displayName: "עלית/ תפוצת מתוקים",
-      name: "תפוצת מתוקים",
-      members: [
-        { displayName: "רמד מלוחים", sAMAccountName: "ramad@services.idf" },
-        { displayName: "רמד מתוקים", sAMAccountName: "ddk@services.idf" },
-        { displayName: "רמד מתוקים", sAMAccountName: "ddk@services.idf" },
-        { displayName: "רמד מלוחים", sAMAccountName: "ramad@services.idf" },
-      ],
-      owner: { displayName: "עלית רמד מתוקים" },
-      type: "distribution",
-      classification: "blue",
-      sAMAccountName: "metukin_mail@d360",
-    },
-  ];
-
-  groups.map((group) => {
-    group.attendees = group.members.length;
-    group.hierarchy = getHierarchyFromDisplayNameAndName(group.displayName, group.name);
-    return group;
-  });
+  groups.map((group) => formatGroup(group));
   return groups;
 }
 

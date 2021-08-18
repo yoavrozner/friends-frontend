@@ -13,7 +13,8 @@ const getters = {
 const actions = {
   async fetchOwnedGroups({ commit, dispatch }) {
     try {
-      const ownedGroups = await groupApi.getUserGroups();
+      // TODO: fitler state.mygroups
+      const ownedGroups = state.myGroups;
 
       commit(
         "setOwnedGroups",

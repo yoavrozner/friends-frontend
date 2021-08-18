@@ -7,7 +7,7 @@
 
 <script>
 import Table from "@/components/common/table/Table";
-import EditGroupPopup from "../popups/editGroupPopup/editGroupPopup.vue";
+import EditGroupPopup from "@/components/common/popups/editGroupPopup/editGroupPopup.vue";
 import { mapGetters } from "vuex";
 
 export default {

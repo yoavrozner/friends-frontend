@@ -2,32 +2,40 @@
   <v-form id="form" v-model="valid">
     <FormInput
       :label="$t('hierarchyLabel')"
-      :placeholder="$t('hierarchyPlaceholder')"
-      @input="hierarchy = $event"
-      :required="true"
-      :rules="requiredRules"
+      :startValue="user.hierarchyFlat"
       :readonly="true"
       :solo="false"
       :filled="true"
     />
     <div id="selects-container">
-      <Radio :items="groupTypes" @change="type = $event" :rules="requiredRules" />
+      <Radio class="child" :items="groupTypes" @change="type = $event" :rules="requiredRules" />
       <Select
         :label="$t('group.classification.title')"
         :items="classificationTypes"
-        @select="classifaction = $event"
+        @select="classification = $event"
         :rules="requiredRules"
       />
     </div>
     <FormInput
       :label="$t('group.displayName')"
       :placeholder="$t('displayNamePlaceholder')"
-      @input="displayName = $event"
       :required="true"
+      :maxlength="limitDisplayName"
       :rules="displayNameRules"
-      :prefix="hierarchy + '/'"
+      :prefix="user.hierarchyFlat + '/'"
+      @input="displayName = $event"
     />
-
+    <div v-if="type && isSecurityGroup()" id="groupName">
+      <FormInput
+        :label="$t('group.sAMAccountName')"
+        :placeholder="$t('groupNamePlaceholder')"
+        @input="prefixGroupName = $event"
+        :required="true"
+        :rules="requiredRules"
+        :hint="groupName"
+        restrictPattern="^[a-zA-Z0-9_]*$"
+      />
+    </div>
     <div id="add-members">
       <Autocomplete
         icon
@@ -76,21 +84,22 @@
 <script>
 import * as usersApi from "@/api/user";
 import Chips from "@/components/common/text/BaseChips";
-import FormInput from "@/components/inputs/FormInput";
-import Select from "@/components/inputs/Select";
-import Radio from "@/components/inputs/Radio";
+import FormInput from "@/components/common/inputs/FormInput";
+import Select from "@/components/common/inputs/Select";
+import Radio from "@/components/common/inputs/Radio";
 import SubmitButton from "@/components/common/button/SubmitButton";
-import Autocomplete from "@/components/inputs/BaseAutocomplete";
+import Autocomplete from "@/components/common/inputs/BaseAutocomplete";
 
 import { mapGetters } from "vuex";
-import { GroupTypeEnum } from "@/utils/group";
+import { ClassificationTypeSuffixGroupName } from "@/utils/classification";
+import { GroupTypeEnum, GroupTypeSuffixGroupName } from "@/utils/group";
 import { getUserLimitMembers } from "@/utils/user";
 
 export default {
   name: "GroupForm",
   components: { FormInput, Select, Radio, SubmitButton, Autocomplete, Chips },
   computed: {
-    ...mapGetters(["isApprover", "user"]),
+    ...mapGetters(["isApprover", "user", "limitDisplayName"]),
   },
   data() {
     return {
@@ -101,22 +110,43 @@ export default {
       selectedApprovals: [],
       hierarchy: "",
       groupTypes: [
-        { label: this.$t("distributionGroups"), value: GroupTypeEnum.distribution },
-        { label: this.$t("securityGroups"), value: GroupTypeEnum.secuirty },
+        { label: this.$t("distributionGroups.name"), value: GroupTypeEnum.distribution },
+        { label: this.$t("securityGroups.name"), value: GroupTypeEnum.security },
       ],
       classificationTypes: Object.values(this.$t("group.classification.options")),
       type: undefined,
-      classifaction: undefined,
+      classification: undefined,
       displayName: "",
+      prefixGroupName: "",
+      groupName: "",
       valid: false,
       requiredRules: [(v) => !!v || this.$t("group.create.required")],
       displayNameRules: [
         (v) => !!v || this.$t("group.create.required"),
-        (v) => v.length <= 20 || this.$t("group.create.displayNameLimit"),
+        (v) => v.length <= this.limitDisplayName || this.$t("group.create.displayNameLimit"),
       ],
     };
   },
+  watch: {
+    type() {
+      this.getGroupName();
+    },
+    classification() {
+      this.getGroupName();
+    },
+    prefixGroupName() {
+      this.getGroupName();
+    },
+  },
   methods: {
+    isSecurityGroup() {
+      return this.type === GroupTypeEnum.security;
+    },
+    getGroupName() {
+      this.groupName = `${this.prefixGroupName}_${ClassificationTypeSuffixGroupName(
+        this.classification
+      )}_${GroupTypeSuffixGroupName(this.type)}`;
+    },
     checkValidationMembers() {
       const limit = getUserLimitMembers();
       return this.selectedUsers.length > limit ? this.$t("group.create.MembersLimit", { limit: limit }) : null;
@@ -154,14 +184,10 @@ export default {
       this.selectedApprovals = [approver];
     },
     onUserRemove(item) {
-      this.selectedUsers = this.selectedUsers.filter((user) => {
-        return user.id !== item.id;
-      });
+      this.selectedUsers = this.selectedUsers.filter((user) => user.id !== item.id);
     },
     onApprovalRemove(item) {
-      this.selectedApprovals = this.selectedApprovals.filter((user) => {
-        return user.id !== item.id;
-      });
+      this.selectedApprovals = this.selectedApprovals.filter((user) => user.id !== item.id);
     },
     isUserExists(users, id) {
       return users.some((user) => user.id === id);
@@ -170,7 +196,7 @@ export default {
       const group = {
         hierarchy: this.hierarchy,
         type: this.type,
-        classifaction: this.classifaction,
+        classification: this.classification,
         displayName: `${this.hierarchy}/${this.displayName}`,
         members: this.members,
         approver: this.isApprover ? this.user.id : this.approver,
@@ -188,7 +214,7 @@ export default {
 }
 #selects-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 #attention-container {
   border: 1px solid black;
@@ -203,5 +229,9 @@ export default {
   font-size: 20px;
   padding: 30px;
   margin: 30px;
+}
+.child {
+  flex: 1;
+  margin-right: 220px;
 }
 </style>

@@ -24,9 +24,9 @@ export default {
     };
   },
   methods: {
-    getData() {
+    async getData() {
+      await this.$store.dispatch("fetchMyGroups");
       this.$store.dispatch("fetchRequests");
-      this.$store.dispatch("fetchMyGroups");
       this.$store.dispatch("fetchOwnedGroups");
     },
   },

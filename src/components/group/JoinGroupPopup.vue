@@ -20,7 +20,7 @@
 
 <script>
 import * as joinApi from "@/api/join";
-import TextArea from "@/components/inputs/TextArea";
+import TextArea from "@/components/common/inputs/TextArea";
 import SubmitButton from "@/components/common/button/SubmitButton";
 
 export default {
