@@ -36,7 +36,7 @@ export async function searchGroups(partialName) {
 }
 
 /**
- * getGroupById - get group by id
+ * getGroupById - get group by id (sAMAccountName)
  * @param {string} id - id of the group
  * */
 export async function getGroupById(id) {
@@ -49,7 +49,6 @@ export async function getGroupById(id) {
 
   let group = groups[0];
   group = formatGroup(group);
-
   return group;
 }
 

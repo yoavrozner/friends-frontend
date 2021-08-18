@@ -30,10 +30,13 @@
         :label="$t('group.sAMAccountName')"
         :placeholder="$t('groupNamePlaceholder')"
         @input="prefixGroupName = $event"
+        :inputChecker="true"
         :required="true"
-        :rules="requiredRules"
+        :rules="groupNameRules"
         :hint="groupName"
         restrictPattern="^[a-zA-Z0-9_]*$"
+        :validator="checkValidation"
+        :error="!isGroupNameValid"
       />
     </div>
     <div id="add-members">
@@ -75,7 +78,7 @@
       id="send-button"
       color="#2c3448"
       :label="$t('send')"
-      :disabled="!valid || checkValidationMembers() != null"
+      :disabled="!valid || checkValidationMembers() != null || !isGroupNameValid || approvers < 1"
       @click="onComplete"
     />
   </v-form>
@@ -83,6 +86,9 @@
 
 <script>
 import * as usersApi from "@/api/user";
+import * as groupApi from "@/api/group";
+import debounce from "lodash/debounce";
+
 import Chips from "@/components/common/text/BaseChips";
 import FormInput from "@/components/common/inputs/FormInput";
 import Select from "@/components/common/inputs/Select";
@@ -99,7 +105,7 @@ export default {
   name: "GroupForm",
   components: { FormInput, Select, Radio, SubmitButton, Autocomplete, Chips },
   computed: {
-    ...mapGetters(["isApprover", "isSuper", "user", "limitDisplayName"]),
+    ...mapGetters(["isApprover", "isSuper", "user", "limitDisplayName", "minLimitGroupName"]),
   },
   data() {
     return {
@@ -119,30 +125,41 @@ export default {
       displayName: "",
       prefixGroupName: "",
       groupName: "",
+      isGroupNameValid: true,
       valid: false,
       requiredRules: [(v) => !!v || this.$t("group.create.required")],
       displayNameRules: [
         (v) => !!v || this.$t("group.create.required"),
         (v) => v.length <= this.limitDisplayName || this.$t("group.create.displayNameLimit"),
       ],
+      groupNameRules: [(v) => !!v || this.$t("group.create.required")],
     };
   },
   watch: {
     type() {
+      this.isGroupNameValid = true;
+      this.prefixGroupName = "";
       this.getGroupName();
+      this.onInputGroupName();
     },
     classification() {
       this.getGroupName();
+      this.onInputGroupName();
     },
     prefixGroupName() {
       this.getGroupName();
+      this.onInputGroupName();
     },
   },
   methods: {
+    checkValidation() {
+      return this.isGroupNameValid ? null : this.$t("group.create.groupNameAlreadyExists");
+    },
     isSecurityGroup() {
       return this.type === GroupTypeEnum.security;
     },
     getGroupName() {
+      console.log(this.prefixGroupName);
       this.groupName = `${this.prefixGroupName}_${ClassificationTypeSuffixGroupName(
         this.classification
       )}_${GroupTypeSuffixGroupName(this.type)}`;
@@ -151,6 +168,17 @@ export default {
       const limit = getUserLimitMembers();
       return this.selectedUsers.length > limit ? this.$t("group.create.MembersLimit", { limit: limit }) : null;
     },
+    onInputGroupName: debounce(async function() {
+      if (
+        typeof this.groupName === "string" &&
+        this.groupName.length >= this.minLimitGroupName &&
+        this.classification &&
+        this.type
+      ) {
+        const group = await groupApi.getGroupById(this.groupName);
+        group.sAMAccountName === this.groupName ? (this.isGroupNameValid = false) : (this.isGroupNameValid = true);
+      }
+    }, 100),
     getUsersByName(name) {
       if (this.isLoading) return;
       this.isLoading = true;
@@ -201,6 +229,10 @@ export default {
         members: this.members,
         approver: this.isApprover || this.isSuper ? this.user.id : this.approver,
       };
+
+      if (this.isSecurityGroup()) {
+        group.groupName = this.groupName;
+      }
 
       this.$emit("complete", group);
     },

@@ -37,7 +37,8 @@
     "create": {
       "required": "שדה חובה",
       "displayNameLimit": "שם התצוגה מוגבל ל-20 תווים",
-      "MembersLimit": "ניתן להוסיף עד {limit} משתתפים"
+      "MembersLimit": "ניתן להוסיף עד {limit} משתתפים",
+      "groupNameAlreadyExists": "שם הקבוצה כבר קיים"
     }
   },
   "user": {

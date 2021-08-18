@@ -1,6 +1,6 @@
 const groups = [
   {
-    sAMAccountName: "Meluhim_purpleM_SG@services.idf",
+    sAMAccountName: "netta_purpleM_SG",
     displayName: "מפקדת אסם/ ענף חטיפים/ מדור מלוחים/מלוחים טעימים מאוד/שיתוף מלוחים סמצ",
     name: "שיתוף מלוחים סמצ",
     classification: "limitedPurple",
@@ -8,7 +8,7 @@ const groups = [
       { displayName: "רמד מלוחים", sAMAccountName: "ramad@services.idf" },
       { displayName: "רמד מתוקים", sAMAccountName: "ddk@services.idf" },
     ],
-    owner: { displayName: "רמד מלוחים", sAMAccountName: "ramad@services.idf" },
+    owner: { displayName: "מאיה", sAMAccountName: "maya" },
     type: "distribution",
   },
   {

@@ -3,7 +3,7 @@
     <Header :txt="$t('welcome')" />
     <div id="links-container">
       <LinkButton color="#9AB6EA" path="/profile" :txt="$t('pages.profile')" />
-      <LinkButton color="#B5DE99" path="/groups" :txt="$t('pages.searchGroup')" />
+      <LinkButton color="#B5DE99" path="/" :txt="$t('pages.searchGroup')" />
       <LinkButton color="#FFBD8D" path="/requests" :txt="$t('pages.myRequests')" />
       <LinkButton color="#FFE66F" path="/create-group" :txt="$t('pages.createGroup')" />
     </div>
