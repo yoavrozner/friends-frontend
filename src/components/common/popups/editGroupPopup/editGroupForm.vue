@@ -15,14 +15,16 @@
       :readonly="!canEditGroupName() || !edit"
       :reset="resetGroupName"
     />
-    <!-- todo: change owner -->
-    <FormInput
+    <Autocomplete
+      icon
+      background="white"
       :label="$t('group.owner')"
       :placeholder="$t('ownerPlaceholder')"
-      @input="displayName = $event"
-      :startValue="group.owner.displayName"
-      :readonly="!edit"
-      :reset="resetOwnerName"
+      :items="users"
+      :isLoading="isLoading"
+      :minLength="2"
+      @select="onOwnerSelect"
+      @type="getUsersByName"
     />
     <div id="edit-group">
       <SubmitButton
@@ -162,6 +164,12 @@ export default {
       if (!user) return;
       else if (this.isUserExists(this.selectedUsers, user.id)) this.remove(user);
       else this.selectedUsers.push(user);
+    },
+    onOwnerSelect(user) {
+      this.users = [];
+      if (!user) return;
+      else if (this.isUserExists(this.selectedUsers, user.id)) this.remove(user);
+      else this.selectedUsers = [user];
     },
     onUserRemove(item) {
       this.selectedUsers = this.selectedUsers.filter((user) => {
