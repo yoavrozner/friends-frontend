@@ -16,6 +16,8 @@
       :maxlength="maxlength != null ? maxlength : false"
       :counter="maxlength != null"
       @keydown="restrictCharacters"
+      :error="error != null ? error : false"
+      :error-messages="errors"
     ></v-text-field>
   </div>
 </template>
@@ -37,6 +39,8 @@ export default {
     "hint",
     "maxlength",
     "restrictPattern",
+    "validator",
+    "error",
   ],
   methods: {
     restrictCharacters(e) {
@@ -47,6 +51,7 @@ export default {
   },
   data() {
     return {
+      errors: "",
       value: this.startValue ? this.startValue : "",
     };
   },
@@ -58,6 +63,9 @@ export default {
     },
     startValue(val) {
       this.value = val;
+    },
+    error() {
+      this.errors = this.validator();
     },
   },
 };
