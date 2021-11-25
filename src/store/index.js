@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import auth from "./modules/auth";
 import dictionary from "./modules/dictionary";
 import error from "./modules/error";
+import success from "./modules/success";
 import join from "./modules/join";
 import create from "./modules/create";
 import owner from "./modules/owner";
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     dictionary,
     configuration,
     error,
+    success,
     join,
     create,
     owner,

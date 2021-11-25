@@ -13,7 +13,7 @@ const getters = {
 const actions = {
   async fetchCreateRequests({ commit, dispatch }) {
     try {
-      const createRequests = await createApi.getGroupRequestByCreator();
+      const createRequests = await createApi.getGroupRequestByCreator() || [];
 
       commit("setCreateRequests", createRequests);
     } catch (err) {
@@ -22,7 +22,7 @@ const actions = {
   },
   async fetchCreateRequestsApprover({ commit, dispatch }) {
     try {
-      const createRequestsApprover = await createApi.getGroupRequestByApprover();
+      const createRequestsApprover = await createApi.getGroupRequestByApprover() || [];
 
       commit(
         "setCreateRequestsApprover",

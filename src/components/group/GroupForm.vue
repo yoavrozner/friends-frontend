@@ -1,72 +1,28 @@
 <template>
   <v-form id="form" v-model="valid">
-    <FormInput
-      :label="$t('hierarchyLabel')"
-      :startValue="user.hierarchyFlat"
-      :readonly="true"
-      :solo="false"
-      :filled="true"
-    />
+    <FormInput :label="$t('hierarchyLabel')" :startValue="user.hierarchyFlat" :readonly="true" :solo="false" :filled="true" />
     <div id="selects-container">
       <Radio class="child" :items="groupTypes" @change="type = $event" :rules="requiredRules" />
-      <Select
-        :label="$t('group.classification.title')"
-        :items="classificationTypes"
-        @select="classification = $event"
-        :rules="requiredRules"
+      <Select :label="$t('group.classification.title')" :items="classificationTypes" @select="classification = $event" :rules="requiredRules"
       />
     </div>
-    <FormInput
-      :label="$t('group.displayName')"
-      :placeholder="$t('displayNamePlaceholder')"
-      :required="true"
-      :maxlength="limitDisplayName"
-      :rules="displayNameRules"
-      :prefix="user.hierarchyFlat + '/'"
-      @input="displayName = $event"
-    />
+    <FormInput :label="$t('group.displayName')" :placeholder="$t('displayNamePlaceholder')" :required="true" :maxlength="limitDisplayName"
+      :rules="displayNameRules" :prefix="user.hierarchyFlat + '/'" @input="displayName = $event" />
     <div v-if="type && isSecurityGroup()" id="groupName">
-      <FormInput
-        :label="$t('group.sAMAccountName')"
-        :placeholder="$t('groupNamePlaceholder')"
-        @input="prefixGroupName = $event"
-        :inputChecker="true"
-        :required="true"
-        :rules="requiredRules"
-        :hint="groupName"
-        restrictPattern="^[a-zA-Z0-9_]*$"
-        :validator="checkValidation"
-        :error="!isGroupNameValid"
-      />
+      <FormInput :label="$t('group.sAMAccountName')" :placeholder="$t('groupNamePlaceholder')" @input="prefixGroupName = $event"
+        :inputChecker="true" :required="true" :rules="requiredRules" :hint="groupName" restrictPattern="^[a-zA-Z0-9_]*$" :validator="checkValidation"
+        :error="!isGroupNameValid" />
     </div>
     <div id="add-members">
-      <Autocomplete
-        icon
-        background="white"
-        :label="$t('membersLabel')"
-        :placeholder="$t('membersPlaceholder')"
-        :items="users"
-        :isLoading="isLoading"
-        :minLength="2"
-        @select="onUserSelect"
-        @type="getUsersByName"
-        :validation="checkValidationMembers"
-      />
+      <Autocomplete icon background="white" :label="$t('membersLabel')" :placeholder="$t('membersPlaceholder')" :items="users"
+        :isLoading="isUsersLoading" :minLength="2" @select="onUserSelect" @type="getUsersByName" :validation="checkValidationMembers"
+        :disabled="checkValidationMembers() != null" :error="checkValidationMembers() != null" />
       <Chips :users="selectedUsers" @remove="onUserRemove" />
     </div>
 
     <div v-if="!isApprover && !isSuper" id="approver">
-      <Autocomplete
-        icon
-        background="white"
-        :label="$t('approverLabel')"
-        :placeholder="$t('approverPlaceholder')"
-        :items="approvers"
-        :minLength="2"
-        :isLoading="isLoading"
-        @select="onApproverSelect"
-        @type="getApproversByName"
-      />
+      <Autocomplete icon background="white" :label="$t('approverLabel')" :placeholder="isApproverDisabled() ? $t('pleaseChooseGroupType') : $t('approverPlaceholder')" :items="approvers"
+        :minLength="2" :isLoading="isApproversLoading" @select="onApproverSelect" @type="getApproversByName" :disabled="isApproverDisabled()"/>
       <Chips :users="selectedApprovals" @remove="onApprovalRemove" />
     </div>
 
@@ -74,13 +30,8 @@
       {{ $t("attention") }} <b>{{ $t("think") }}</b>
     </div>
 
-    <SubmitButton
-      id="send-button"
-      color="#2c3448"
-      :label="$t('send')"
-      :disabled="!valid || checkValidationMembers() != null || !isGroupNameValid || approvers < 1"
-      @click="onComplete"
-    />
+    <SubmitButton id="send-button" color="#2c3448" :label="$t('send')" :disabled="isCompleteDisabled()"
+      @click="onComplete" />
   </v-form>
 </template>
 
@@ -109,7 +60,8 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
+      isUsersLoading: false,
+      isApproversLoading: false,
       users: [],
       selectedUsers: [],
       approvers: [],
@@ -130,7 +82,7 @@ export default {
       requiredRules: [(v) => !!v || this.$t("group.create.required")],
       displayNameRules: [
         (v) => !!v || this.$t("group.create.required"),
-        (v) => v.length <= this.limitDisplayName || this.$t("group.create.displayNameLimit"),
+        (v) => v && v.length <= this.limitDisplayName || this.$t("group.create.displayNameLimit"),
       ],
     };
   },
@@ -151,8 +103,14 @@ export default {
     },
   },
   methods: {
+    isCompleteDisabled() {
+      return !this.valid || this.checkValidationMembers() != null || !this.isGroupNameValid || !this.selectedApprovals;
+    },
     checkValidation() {
       return this.isGroupNameValid ? null : this.$t("group.create.groupNameAlreadyExists");
+    },
+    isApproverDisabled() {
+      return !this.type;
     },
     isSecurityGroup() {
       return this.type === GroupTypeEnum.security;
@@ -164,38 +122,39 @@ export default {
     },
     checkValidationMembers() {
       const limit = getUserLimitMembers();
-      return this.selectedUsers.length > limit ? this.$t("group.create.MembersLimit", { limit: limit }) : null;
+      return this.selectedUsers && this.selectedUsers.length >= limit ? this.$t("group.create.MembersLimit", { limit: limit }) : null;
     },
     onInputGroupName: debounce(async function() {
       if (
         typeof this.groupName === "string" &&
+        this.groupName &&
         this.groupName.length >= this.minLimitGroupName &&
         this.classification &&
         this.type
       ) {
         const group = await groupApi.getGroupById(this.groupName);
-        group.sAMAccountName === this.groupName ? (this.isGroupNameValid = false) : (this.isGroupNameValid = true);
+        group && group.sAMAccountName && this.groupName && group.sAMAccountName === this.groupName ? (this.isGroupNameValid = false) : (this.isGroupNameValid = true);
       }
     }, 100),
     getUsersByName(name) {
-      if (this.isLoading) return;
-      this.isLoading = true;
+      if (this.isUsersLoading) return;
+      this.isUsersLoading = true;
       usersApi
         .searchUsersByName(name)
         .then((users) => {
           this.users = users;
         })
-        .finally(() => (this.isLoading = false));
+        .finally(() => (this.isUsersLoading = false));
     },
     getApproversByName(name) {
-      if (this.isLoading) return;
-      this.isLoading = true;
+      if (this.isApproversLoading) return;
+      this.isApproversLoading = true;
       usersApi
-        .searchApproverByName(name)
+        .searchApproverByName(this.isSecurityGroup() ? "security": "distribution", name)
         .then((approvers) => {
           this.approvers = approvers;
         })
-        .finally(() => (this.isLoading = false));
+        .finally(() => (this.isApproversLoading = false));
     },
     onUserSelect(user) {
       this.users = [];
@@ -204,6 +163,15 @@ export default {
       else this.selectedUsers.push(user);
     },
     onApproverSelect(approver) {
+      console.log("#########################################################")
+      console.log(this.valid)
+      console.log(this.checkValidationMembers())
+      console.log(this.isGroupNameValid)
+      console.log(this.selectedApprovals)
+      console.log(this.approvers)
+      console.log(approver)
+      console.log("#########################################################")
+      
       this.approvers = [];
       if (!approver) return;
       else if (this.isUserExists(this.selectedApprovals, approver.id)) this.remove(approver);
@@ -225,7 +193,7 @@ export default {
         classification: this.classification,
         displayName: `${this.hierarchy}/${this.displayName}`,
         members: this.members,
-        approver: this.isApprover || this.isSuper ? this.user.id : this.approver,
+        approver: (this.isApprover || this.isSuper) ? [this.user.id] : this.selectedApprovals,
       };
 
       if (this.isSecurityGroup()) {
@@ -239,29 +207,35 @@ export default {
 </script>
 
 <style scoped>
-#form {
-  margin: 30px 200px;
-}
-#selects-container {
-  display: flex;
-  justify-content: center;
-}
-#attention-container {
-  border: 1px solid black;
-  color: red;
-  font-size: 18px;
-  margin: auto;
-  width: 400px;
-  padding: 10px;
-}
-#send-button {
-  color: white;
-  font-size: 20px;
-  padding: 30px;
-  margin: 30px;
-}
-.child {
-  flex: 1;
-  margin-right: 220px;
-}
+  #form {
+    margin: 30px 200px;
+  }
+  
+  #selects-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  #attention-container {
+    border: 1px solid black;
+    color: red;
+    font-size: 18px;
+    margin: auto;
+    width: 400px;
+    padding: 10px;
+  }
+  
+  #send-button {
+    color: white;
+    font-size: 20px;
+    padding: 0px;
+    margin: 30px;
+    height: 50px;
+    width: 100px;
+  }
+  
+  .child {
+    flex: 1;
+    margin-right: 220px;
+  }
 </style>

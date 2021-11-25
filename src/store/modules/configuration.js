@@ -1,6 +1,7 @@
 const state = {
   limitDisplayName: 20,
   minLimitGroupName: 2,
+  authURL: '/auth/login',
 };
 
 const getters = {

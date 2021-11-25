@@ -44,7 +44,7 @@ export default {
     },
     onJoin() {
       this.dialog = false;
-      joinApi.createJoinRequest(this.group.id);
+      joinApi.createJoinRequest(this.group.id, this.group.owner.sAMAccountName, this.joinReason );
     },
   },
   watch: {

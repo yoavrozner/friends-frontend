@@ -37,11 +37,12 @@ export function isSecurityGroup(group) {
 }
 
 export function getHierarchyFromDisplayNameAndName(displayName, name) {
-  return displayName.replace(new RegExp("/" + name + "$"), "");
+  return displayName ? displayName.replace(new RegExp("/" + name + "$"), "") : "";
 }
 
 export function formatGroup(group) {
-  group.attendees = group.members.length;
+  group.id = group.id ? group.id : group.sAMAccountName;
+  group.attendees = group.members ? group.members.length : 0;
   group.hierarchy = getHierarchyFromDisplayNameAndName(group.displayName, group.name);
 
   return group;

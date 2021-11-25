@@ -9,10 +9,10 @@ import { formatKartoffelUser, formatADUser } from "@/utils/user";
  */
 export async function getUserByKartoffelId(kartoffelId) {
   try {
-    const res = await Axios.get(`${baseURL}/api/user/kartoffel/${kartoffelId}`);
-    const user = formatKartoffelUser(res.data.user);
+    const res = await Axios.get(`${baseURL}/api/users/kartoffel/${kartoffelId}`);
+    const user = formatKartoffelUser(res.data);
     store.commit("addUserToictionary", user);
-
+    console.log(user);
     return user;
   } catch (error) {
     store.dispatch("onError", error);
@@ -25,10 +25,9 @@ export async function getUserByKartoffelId(kartoffelId) {
  * */
 export async function getUserByDomainUser(domainUser) {
   try {
-    const res = await Axios.get(`${baseURL}/api/user/domainuser/${domainUser}`);
-    const user = formatKartoffelUser(res.data.user);
+    const res = await Axios.get(`${baseURL}/api/users/domainuser/${domainUser}`);
+    const user = formatKartoffelUser(res.data);
     store.commit("addUserToictionary", user);
-
     return user;
   } catch (error) {
     store.dispatch("onError", error);
@@ -42,12 +41,12 @@ export async function getUserByDomainUser(domainUser) {
 export async function searchUsersByName(name) {
   try {
     const res = await Axios.get(`${baseURL}/api/users`, {
-      params: { partial: name },
+      params: { partialName: name },
     });
-    const users = res.data.users
-      ? res.data.users.filter((user) => {
-          return user.id !== store.state.auth.user.id;
-        })
+    const users = res.data
+      ? res.data.filter((user) => {
+        return user.id !== store.state.auth.user.id;
+      })
       : [];
 
     return Promise.all(users.map((user) => formatADUser(user)));
@@ -61,7 +60,7 @@ export async function searchUsersByName(name) {
  * */
 export async function isApprover() {
   try {
-    const res = await Axios.get(`${baseURL}/api/user/approver`);
+    const res = await Axios.get(`${baseURL}/api/users/approver`);
     return res.data;
   } catch (error) {
     store.dispatch("onError", error);
@@ -73,7 +72,7 @@ export async function isApprover() {
  * */
 export async function isSuperUser() {
   try {
-    const res = await Axios.get(`${baseURL}/api/user/super`);
+    const res = await Axios.get(`${baseURL}/api/users/super`);
     return res.data;
   } catch (error) {
     store.dispatch("onError", error);
@@ -84,15 +83,17 @@ export async function isSuperUser() {
  * searchApproverByName gets all the approvers with the received name
  * @param name is the name of the approver
  */
-export async function searchApproverByName(name) {
+export async function searchApproverByName(groupType, name) {
   try {
-    const res = await Axios.get(`${baseURL}/api/users/approvers`, {
-      params: { partial: name },
+    // return await searchUsersByName(name);
+    // TODO: use this for real approvers
+    const res = await Axios.get(`${baseURL}/api/users/approvers/${groupType}`, {
+      params: { partialName: name },
     });
-    const users = res.data.users
-      ? res.data.users.filter((user) => {
-          return user.id !== store.state.auth.user.id;
-        })
+    const users = res.data
+      ? res.data.filter((user) => {
+        return user.id !== store.state.auth.user.id;
+      })
       : [];
     return Promise.all(users.map((user) => formatKartoffelUser(user)));
   } catch (error) {

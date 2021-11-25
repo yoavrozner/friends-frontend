@@ -1,5 +1,5 @@
 <template>
-  <v-snackbar v-model="open" bottom right color="red" @click.stop v-if="error">
+  <v-snackbar v-model="open" bottom right color="red" @click.stop v-if="error === 121">
     <div class="flex">
       <v-icon id="block" color="white">mdi-alert-circle</v-icon>
       <div>

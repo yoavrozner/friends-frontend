@@ -24,13 +24,16 @@ export default {
   },
   methods: {
     onDeny(request) {
-      joinApi.denyJoinRequest(request.id);
+      joinApi.denyJoinRequest(request._id);
+      this.$store.dispatch("fetchJoinRequestsApprover");
+
     },
     onApprove(request) {
       this.$refs.notePopup.open(request);
     },
     onApproveComplete(request) {
-      joinApi.approveJoinRequest(request.id);
+      joinApi.approveJoinRequest(request._id);
+      this.$store.dispatch("fetchJoinRequestsApprover");
     },
   },
 };

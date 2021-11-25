@@ -11,7 +11,7 @@ export async function createOwnerRequest({ groupId, ownerId }) {
   try {
     const res = await Axios.post(`${baseURL}/api/owner/request`, {
       groupId,
-      ownerId,
+      approver: ownerId,
     });
     return res.data;
   } catch (error) {
@@ -25,7 +25,7 @@ export async function createOwnerRequest({ groupId, ownerId }) {
 export async function getOwnerRequestByCreator() {
   try {
     const res = await Axios.get(`${baseURL}/api/owner/requests/creator`);
-    const requestsFormatted = formatOwnerRequests(res.data);
+    const requestsFormatted = res.data.requests ? await formatOwnerRequests(res.data.requests) : [];
     return requestsFormatted;
   } catch (error) {
     store.dispatch("onError", error);
@@ -38,7 +38,9 @@ export async function getOwnerRequestByCreator() {
 export async function getOwnerRequestByApprover() {
   try {
     const res = await Axios.get(`${baseURL}/api/owner/requests/approver`);
-    const requestsFormatted = formatOwnerRequests(res.data);
+    const requestsFormatted = res.data.requests ? await formatOwnerRequests(res.data.requests) : [];
+    // const user = await getUserByKartoffelId(request.approver);
+    // requestsFormatted.
     return requestsFormatted;
   } catch (error) {
     store.dispatch("onError", error);
@@ -51,7 +53,7 @@ export async function getOwnerRequestByApprover() {
  * */
 export async function denyJoinRequest(ownerReqId) {
   try {
-    const res = await Axios.put(`${baseURL}/api/owner/deny/${ownerReqId}`);
+    const res = await Axios.put(`${baseURL}/api/owner/request/deny/${ownerReqId}`);
     return res.data;
   } catch (error) {
     store.dispatch("onError", error);
@@ -64,7 +66,7 @@ export async function denyJoinRequest(ownerReqId) {
  * */
 export async function approveOwnerRequest(ownerReqId) {
   try {
-    const res = await Axios.put(`${baseURL}/api/owner/approve/${ownerReqId}`);
+    const res = await Axios.put(`${baseURL}/api/owner/request/approve/${ownerReqId}`);
     return res.data;
   } catch (error) {
     store.dispatch("onError", error);
