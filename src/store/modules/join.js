@@ -13,7 +13,7 @@ const getters = {
 const actions = {
   async fetchJoinRequests({ commit, dispatch }) {
     try {
-      const joinRequests = await joinApi.getJoinRequestByCreator();
+      const joinRequests = await joinApi.getJoinRequestByCreator() || [];
 
       commit("setJoinRequests", joinRequests);
     } catch (err) {
@@ -22,7 +22,7 @@ const actions = {
   },
   async fetchJoinRequestsApprover({ commit, dispatch }) {
     try {
-      const joinRequestsApprover = await joinApi.getJoinRequestByApprover();
+      const joinRequestsApprover = await joinApi.getJoinRequestByApprover() || [];
 
       commit(
         "setJoinRequestsApprover",

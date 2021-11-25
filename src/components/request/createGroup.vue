@@ -22,10 +22,15 @@ export default {
   },
   methods: {
     onDeny(request) {
-      createApi.denyGroupRequest(request.id);
+      createApi.denyGroupRequest(request._id);
+      this.$store.dispatch("fetchCreateRequestsApprover");
+
     },
     onApprove(request) {
-      createApi.approveGroupRequest(request.id);
+      console.log(this.createRequestsApprover);
+      createApi.approveGroupRequest(request._id);
+      this.$store.dispatch("fetchCreateRequestsApprover");
+
     },
   },
 };

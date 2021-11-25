@@ -5,6 +5,9 @@
         {{ statusText(item.status) }}
       </v-chip>
     </template>
+    <template v-slot:no-data>
+      <div><p>{{$t("emptyTable")}}</p></div>
+    </template>
     <template v-slot:item.type="{ item }">
       {{ groupTypeText(item.type) }}
     </template>

@@ -9,12 +9,12 @@ import { formatGroup } from "@/utils/group";
  * */
 export async function searchGroups(partialName) {
   const searchDistributionGroups = async (partialName) => {
-    const res = await Axios.get(`${baseURL}/api/groups/distribution?partialName=${partialName}`);
+    const res = await Axios.get(`${baseURL}/api/ad/groups/distribution?partialName=${partialName}`);
     return res.data;
   };
 
   const searchSecurityGroups = async (partialName) => {
-    const res = await Axios.get(`${baseURL}/api/groups/security?partialName=${partialName}`);
+    const res = await Axios.get(`${baseURL}/api/ad/groups/security?partialName=${partialName}`);
     return res.data;
   };
 
@@ -38,7 +38,7 @@ export async function searchGroups(partialName) {
  * */
 export async function getGroupById(id) {
   try {
-    const res = await Axios.get(`${baseURL}/api/groups/${id}`);
+    const res = await Axios.get(`${baseURL}/api/ad/groups/${id}`);
     let group = res.data;
     group = formatGroup(group);
     return group;
@@ -52,7 +52,7 @@ export async function getGroupById(id) {
  * */
 export async function getUserGroups() {
   try {
-    const res = await Axios.get(`${baseURL}/api/user/groups`);
+    const res = await Axios.get(`${baseURL}/api/ad/groups/user`);
     const groups = res.data;
     groups.map((group) => formatGroup(group));
     return groups;
@@ -68,7 +68,7 @@ export async function getUserGroups() {
  * */
 export async function updateGroupOwner(groupId, owner) {
   try {
-    const res = await Axios.put(`${baseURL}/api/group`, { groupId, owner });
+    const res = await Axios.put(`${baseURL}/api/ad/group`, { groupId, owner });
     return res.data;
   } catch (error) {
     store.dispatch("onError", error);
@@ -82,7 +82,7 @@ export async function updateGroupOwner(groupId, owner) {
  * */
 export async function updateGroupDisplayName(groupId, displayName) {
   try {
-    const res = await Axios.put(`${baseURL}/api/group`, { groupId, displayName });
+    const res = await Axios.put(`${baseURL}/api/ad/group`, { groupId, displayName });
     return res.data;
   } catch (error) {
     store.dispatch("onError", error);
@@ -97,7 +97,7 @@ export async function updateGroupDisplayName(groupId, displayName) {
  * */
 export async function updateGroupName(groupId, name) {
   try {
-    const res = await Axios.put(`${baseURL}/api/group`, { groupId, name });
+    const res = await Axios.put(`${baseURL}/api/ad/group`, { groupId, name });
     return res.data;
   } catch (error) {
     store.dispatch("onError", error);
@@ -112,7 +112,7 @@ export async function updateGroupName(groupId, name) {
  * */
 export async function addGroupMember(groupId, users) {
   try {
-    const res = await Axios.put(`${baseURL}/api/groups/users`, { groupId, users });
+    const res = await Axios.put(`${baseURL}/api/ad/groups/users`, { groupId, users });
     return res.data;
   } catch (error) {
     store.dispatch("onError", error);
@@ -126,7 +126,7 @@ export async function addGroupMember(groupId, users) {
  * */
 export async function deleteGroupMember(groupId, users) {
   try {
-    const res = await Axios.delete(`${baseURL}/api/groups/users`, { groupId, users });
+    const res = await Axios.delete(`${baseURL}/api/ad/groups/users`, { groupId, users });
     return res.data;
   } catch (error) {
     store.dispatch("onError", error);
@@ -139,7 +139,7 @@ export async function deleteGroupMember(groupId, users) {
  * */
 export async function deleteGroup(groupId) {
   try {
-    const res = await Axios.delete(`${baseURL}/api/group/${groupId}`);
+    const res = await Axios.delete(`${baseURL}/api/ad/group/${groupId}`);
     return res.data;
   } catch (error) {
     store.dispatch("onError", error);

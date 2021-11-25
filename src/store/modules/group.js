@@ -14,7 +14,7 @@ const actions = {
   async fetchOwnedGroups({ commit, dispatch }) {
     try {
       // TODO: fitler state.mygroups
-      const ownedGroups = state.myGroups;
+      const ownedGroups = state.myGroups || [];
 
       commit(
         "setOwnedGroups",

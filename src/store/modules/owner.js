@@ -13,7 +13,7 @@ const getters = {
 const actions = {
   async fetchOwnerRequests({ commit, dispatch }) {
     try {
-      const ownerRequests = await ownerApi.getOwnerRequestByCreator();
+      const ownerRequests = await ownerApi.getOwnerRequestByCreator() || [];
 
       commit("setOwnerRequests", ownerRequests);
     } catch (err) {
@@ -22,7 +22,7 @@ const actions = {
   },
   async fetchOwnerRequestsApprover({ commit, dispatch }) {
     try {
-      const ownerRequestsApprover = await ownerApi.getOwnerRequestByApprover();
+      const ownerRequestsApprover = await ownerApi.getOwnerRequestByApprover() || [];
 
       commit(
         "setOwnerRequestsApprover",

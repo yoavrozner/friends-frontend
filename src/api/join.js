@@ -2,6 +2,8 @@ import Axios from "axios";
 import store from "@/store";
 import { baseURL } from "@/config";
 import { formatJoinRequests } from "@/utils/join";
+import { getUserByKartoffelId, getUserByDomainUser } from './user'
+import { getGroupById } from "./group"
 
 /**
  * createJoinRequest for joining group
@@ -9,12 +11,30 @@ import { formatJoinRequests } from "@/utils/join";
  * @param {string} approverId - approver id
  * @param {string} joinReason - join reason
  **/
-export async function createJoinRequest({ groupId, approverId, joinReason }) {
+export async function createJoinRequest(groupId, approverId, joinReason) {
+  let user = {};
+  if (approverId != null) {
+    user = await getUserByDomainUser(approverId);
+  } else {
+    user.fullName = "null"
+  }
+  const group = await getGroupById(groupId);
+
+  let groupType = '';
+  if (group.type == 'Security Group') {
+    groupType = 'security';
+  } else if (group.type == 'Distribution Groups') {
+    groupType = 'distribution';
+  }
+
   try {
     const res = await Axios.post(`${baseURL}/api/join/request`, {
       groupId,
-      approverId,
+      creator: store.state.auth.user.id,
       joinReason,
+      type: groupType,
+      displayName: group.displayName,
+      approver: user.fullName,
     });
     return res.data;
   } catch (error) {
@@ -28,8 +48,7 @@ export async function createJoinRequest({ groupId, approverId, joinReason }) {
 export async function getJoinRequestByCreator() {
   try {
     const res = await Axios.get(`${baseURL}/api/join/requests/creator`);
-    const requestsDetail = await formatJoinRequests(res.data);
-
+    const requestsDetail = res.data.requests ? await formatJoinRequests(res.data.requests) : [];
     return requestsDetail;
   } catch (error) {
     store.dispatch("onError", error);
@@ -42,7 +61,11 @@ export async function getJoinRequestByCreator() {
 export async function getJoinRequestByApprover() {
   try {
     const res = await Axios.get(`${baseURL}/api/join/requests/approver`);
-    const requestsDetail = await formatJoinRequests(res.data);
+    const requestsDetail = res.data.requests ? await formatJoinRequests(res.data.requests) : [];
+    await Promise.allSettled(requestsDetail.map(async(request, index) => {
+      const res = await getUserByKartoffelId(request.creator);
+      requestsDetail[index].creator = res.fullName;
+    }));
     return requestsDetail;
   } catch (error) {
     store.dispatch("onError", error);
@@ -55,7 +78,7 @@ export async function getJoinRequestByApprover() {
  * */
 export async function denyJoinRequest(joinReqId) {
   try {
-    const res = await Axios.put(`${baseURL}/api/join/deny/${joinReqId}`);
+    const res = await Axios.put(`${baseURL}/api/join/request/deny/${joinReqId}`);
     return res.data;
   } catch (error) {
     store.dispatch("onError", error);
@@ -68,7 +91,7 @@ export async function denyJoinRequest(joinReqId) {
  * */
 export async function approveJoinRequest(joinReqId) {
   try {
-    const res = await Axios.put(`${baseURL}/api/join/approve/${joinReqId}`);
+    const res = await Axios.put(`${baseURL}/api/join/request/approve/${joinReqId}`);
     return res.data;
   } catch (error) {
     store.dispatch("onError", error);

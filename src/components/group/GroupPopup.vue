@@ -32,7 +32,7 @@
 
 <script>
 import IconButton from "@/components/common/button/IconButton";
-import JoinPopup from "./JoinGroupPopup.vue";
+import JoinPopup from "@/components/group/JoinGroupPopup.vue";
 import { mapGetters } from "vuex";
 import EditGroupPopup from "@/components/common/popups/editGroupPopup/editGroupPopup.vue";
 import { isOwner, isMember } from "@/utils/group"; 

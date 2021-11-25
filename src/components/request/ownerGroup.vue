@@ -24,15 +24,15 @@ export default {
   },
   methods: {
     onDeny(request) {
-      ownerApi.denyJoinRequest(request.id);
-      // TODO: refatch data?
+      ownerApi.denyJoinRequest(request._id);
+      this.$store.dispatch("fetchOwnerRequestsApprover");
     },
     onApprove(request) {
       this.$refs.notePopup.open(request);
     },
     onApproveComplete(request) {
-      ownerApi.approveOwnerRequest(request.id);
-      // TODO: refatch data?
+      ownerApi.approveOwnerRequest(request._id);
+      this.$store.dispatch("fetchOwnerRequestsApprover");
     },
   },
 };

@@ -19,13 +19,16 @@
       :background-color="background"
       :placeholder="placeholder"
       :class="{ disableInput: disabled }"
+      :disabled="disabled != null? disabled: false"
       :prefix="prefix != null ? prefix : ''"
       :suffix="suffix != null ? suffix : ''"
       :hint="hint != null ? hint : ''"
       :persistent-hint="hint != null ? hint : ''"
+      :error="error != null ? error : false"
+      :error-messages="errors"
     >
       <template v-slot:no-data>
-        <p id="no-resault">{{ validationFailedMsg ? validationFailedMsg : $t("autocomplete.noResult") }}</p>
+        <p id="no-resault">{{ $t("autocomplete.noResult") }}</p>
       </template>
     </v-autocomplete>
   </div>
@@ -38,6 +41,7 @@ export default {
   data: () => ({
     item: null,
     value: "",
+    errors: "",
     validationFailedMsg: null,
   }),
   props: [
@@ -54,6 +58,7 @@ export default {
     "prefix",
     "suffix",
     "hint",
+    "error",
   ],
   methods: {
     onSelect() {
@@ -76,6 +81,11 @@ export default {
     onSearch: debounce(function(value) {
       if (typeof value === "string" && value.length >= this.minLength) this.$emit("type", value);
     }, 500),
+  },
+  watch: {
+    error() {
+      this.errors = this.validation();
+    },
   },
 };
 </script>

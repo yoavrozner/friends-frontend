@@ -3,7 +3,7 @@ import cookies from "js-cookie";
 import { Base64 } from "js-base64";
 
 const state = {
-  token: cookies.get("kd-token") || undefined,
+  token: cookies.get("jt-token") || undefined,
   user: undefined,
   isApprover: false,
   isSuper: false,
@@ -17,17 +17,15 @@ const getters = {
 };
 
 const actions = {
-  async authenticate({ rootState, dispatch }) {
+  async authenticate({ dispatch }) {
     if (state.token) {
       await dispatch("parseToken");
-    } else if (rootState.configuration.authUrl) {
-      window.location.replace(rootState.configuration.authUrl);
     } else {
-      return;
+      window.location.replace('/auth/login');
     }
   },
   logout({ commit }) {
-    cookies.remove("kd-token");
+    cookies.remove("jt-token");
     commit("setToken", undefined);
   },
   async getApproverInfo({ commit }) {
@@ -35,7 +33,7 @@ const actions = {
     commit("setIsApprover", isApprover);
   },
   async getSuperInfo({ commit }) {
-    const isSuper = await usersApi.isSuper();
+    const isSuper = await usersApi.isSuperUser();
     commit("setIsSuper", isSuper);
   },
   async parseToken({ commit, dispatch }) {
@@ -55,12 +53,13 @@ const actions = {
         throw new Error("token expired");
       }
 
-      user.hierarchyFlat = user.hierarchy.join("/");
-      user.sAMAccountName = user.mail.split("@")[0];
-      user = {
-        ...user,
-        approverInfos: {},
-      };
+      // TODO: Fix this get
+      const res = await usersApi.getUserByKartoffelId(user.id);
+      user.hierarchyFlat = res.hierarchy.join("/");
+
+      // user.hierarchyFlat = "מערך ספיר/‏מטה/‏ענף יסודות/‏מדור קריפטון/‏צוות פנדורה‏";
+
+      user.sAMAccountName = user.email.split("@")[0];
 
       commit("setUser", user);
 
@@ -73,7 +72,7 @@ const actions = {
 };
 
 const mutations = {
-  setToken: (state) => (state.token = cookies.get("kd-token")),
+  setToken: (state) => (state.token = cookies.get("jt-token")),
   setUser: (state, user) => {
     state.user = user;
   },

@@ -17,6 +17,7 @@ export default {
 <style scoped>
 #footer {
   margin-left: 60px;
+  background-color: #fdebde;
 }
 .fit-height {
   height: 100%;
@@ -26,8 +27,11 @@ export default {
   opacity: 0.8;
   width: 80px;
   margin-left: 30px;
+  margin-bottom: 10px;
 }
 #sapir-logo {
   opacity: 0.8;
+  margin-left: 30px;
+  margin-bottom: 10px;
 }
 </style>
