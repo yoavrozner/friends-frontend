@@ -1,3 +1,3 @@
-const baseURL = window.location.hostname === "localhost" ? "http://localhost:8080" : "";
+const baseURL = window.location.hostname === "localhost" ? "http://localhost" : "";
 
 export { baseURL };

@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import store from "@/store";
 import { mapGetters } from "vuex";
 export default {
   name: "SuccessSnackbar",
@@ -26,7 +27,7 @@ export default {
     success: function(val) {
       console.log("val",val)
       if (val) this.open = true;
-      setTimeout(()=>{this.open=false},3000)
+      setTimeout(()=>{store.dispatch('onSuccess', false);},3000)
     },
   },
   methods: {
