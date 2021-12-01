@@ -1,7 +1,7 @@
-import Axios from "axios";
-import store from "@/store";
-import { baseURL } from "@/config";
-import { formatGroup } from "@/utils/group";
+import Axios from 'axios';
+import store from '@/store';
+import { baseURL } from '@/config';
+import { formatGroup } from '@/utils/group';
 
 /**
  * searchGroups - search groups (distribution and security)
@@ -9,12 +9,16 @@ import { formatGroup } from "@/utils/group";
  * */
 export async function searchGroups(partialName) {
   const searchDistributionGroups = async (partialName) => {
-    const res = await Axios.get(`${baseURL}/api/ad/groups/distribution?partialName=${partialName}`);
+    const res = await Axios.get(
+      `${baseURL}/api/ad/groups/distribution?partialName=${partialName}`
+    );
     return res.data;
   };
 
   const searchSecurityGroups = async (partialName) => {
-    const res = await Axios.get(`${baseURL}/api/ad/groups/security?partialName=${partialName}`);
+    const res = await Axios.get(
+      `${baseURL}/api/ad/groups/security?partialName=${partialName}`
+    );
     return res.data;
   };
 
@@ -28,7 +32,7 @@ export async function searchGroups(partialName) {
 
     return groups;
   } catch (error) {
-    store.dispatch("onError", error);
+    store.dispatch('onError', error);
   }
 }
 
@@ -43,7 +47,7 @@ export async function getGroupById(id) {
     group = formatGroup(group);
     return group;
   } catch (error) {
-    store.dispatch("onError", error);
+    store.dispatch('onError', error);
   }
 }
 
@@ -53,11 +57,14 @@ export async function getGroupById(id) {
 export async function getUserGroups() {
   try {
     const res = await Axios.get(`${baseURL}/api/ad/groups/user`);
+    console.log('res', res);
     const groups = res.data;
     groups.map((group) => formatGroup(group));
+
+    console.log("groups",groups);
     return groups;
   } catch (error) {
-    store.dispatch("onError", error);
+    store.dispatch('onError', error);
   }
 }
 
@@ -71,7 +78,7 @@ export async function updateGroupOwner(groupId, owner) {
     const res = await Axios.put(`${baseURL}/api/ad/group`, { groupId, owner });
     return res.data;
   } catch (error) {
-    store.dispatch("onError", error);
+    store.dispatch('onError', error);
   }
 }
 
@@ -82,10 +89,13 @@ export async function updateGroupOwner(groupId, owner) {
  * */
 export async function updateGroupDisplayName(groupId, displayName) {
   try {
-    const res = await Axios.put(`${baseURL}/api/ad/group`, { groupId, displayName });
+    const res = await Axios.put(`${baseURL}/api/ad/group`, {
+      groupId,
+      displayName,
+    });
     return res.data;
   } catch (error) {
-    store.dispatch("onError", error);
+    store.dispatch('onError', error);
     return null;
   }
 }
@@ -100,7 +110,7 @@ export async function updateGroupName(groupId, name) {
     const res = await Axios.put(`${baseURL}/api/ad/group`, { groupId, name });
     return res.data;
   } catch (error) {
-    store.dispatch("onError", error);
+    store.dispatch('onError', error);
     return null;
   }
 }
@@ -112,10 +122,13 @@ export async function updateGroupName(groupId, name) {
  * */
 export async function addGroupMember(groupId, users) {
   try {
-    const res = await Axios.put(`${baseURL}/api/ad/groups/users`, { groupId, users });
+    const res = await Axios.put(`${baseURL}/api/ad/groups/users`, {
+      groupId,
+      users,
+    });
     return res.data;
   } catch (error) {
-    store.dispatch("onError", error);
+    store.dispatch('onError', error);
   }
 }
 
@@ -126,10 +139,13 @@ export async function addGroupMember(groupId, users) {
  * */
 export async function deleteGroupMember(groupId, users) {
   try {
-    const res = await Axios.delete(`${baseURL}/api/ad/groups/users`, { groupId, users });
+    const res = await Axios.delete(`${baseURL}/api/ad/groups/users`, {
+      groupId,
+      users,
+    });
     return res.data;
   } catch (error) {
-    store.dispatch("onError", error);
+    store.dispatch('onError', error);
   }
 }
 
@@ -142,6 +158,6 @@ export async function deleteGroup(groupId) {
     const res = await Axios.delete(`${baseURL}/api/ad/group/${groupId}`);
     return res.data;
   } catch (error) {
-    store.dispatch("onError", error);
+    store.dispatch('onError', error);
   }
 }

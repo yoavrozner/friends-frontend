@@ -42,6 +42,7 @@ export async function createGroupRequest({
     return res.data;
     } catch (error) {
       store.dispatch("onError", error);
+      throw new Error(error);
     }
   }
 

@@ -9,7 +9,9 @@ import { formatKartoffelUser, formatADUser } from "@/utils/user";
  */
 export async function getUserByKartoffelId(kartoffelId) {
   try {
-    const res = await Axios.get(`${baseURL}/api/users/kartoffel/${kartoffelId}`);
+    console.log("before res");
+    const res = await Axios.get(`${baseURL}/api/users/kartoffel/${kartoffelId}`).catch(err=>console.log("errrrr",err));
+    console.log("after res");
     const user = formatKartoffelUser(res.data);
     store.commit("addUserToictionary", user);
     console.log(user);

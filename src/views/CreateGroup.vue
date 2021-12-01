@@ -28,10 +28,10 @@ export default {
     onComplete(group) {
       this.$refs.notePopup.open(group);
     },
-    onCreateComplete(group) {
-      console.log(group);
-      createApi
-        .createGroupRequest({
+    async onCreateComplete(group) {
+      try {
+        console.log(group);
+        const res = await createApi.createGroupRequest({
           approverId: group.approver[0] || {
             sAMAccountName: this.user.email.split('@')[0],
             displayName: `- ${this.user.name.firstName} ${this.user.name.lastName}`,
@@ -43,12 +43,15 @@ export default {
           classification: group.classification,
           members: group.members,
           owner: this.user.email.split('@')[0],
-        })
-        .then(() => {
-          console.log('success');
-          store.dispatch('onSuccess', true);
-          this.$router.push({ path: '/profile' });
         });
+        console.log("res");
+        console.log(res);
+        console.log('success');
+        store.dispatch('onSuccess', true);
+        this.$router.push({ path: '/profile' });
+      } catch (err) {
+        console.error(err);
+      }
     },
   },
 };

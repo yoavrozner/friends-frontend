@@ -4,7 +4,7 @@
       <FormInput
         :label="$t('group.displayName')"
         :placeholder="$t('displayNamePlaceholder')"
-        :startValue="group.name"
+        :startValue="group.displayName"
         @input="displayName = $event"
         :readonly="!edit"
         :rules="displayNameRules"
@@ -12,7 +12,8 @@
       />
       <FormInput
         :label="$t('group.sAMAccountName')"
-        :startValue="group.sAMAccountName"
+        :placeholder="$t('namePlaceholder')"
+        :startValue="group.name"
         :readonly="!canEditGroupName() || !edit"
         :reset="resetGroupName"
       />

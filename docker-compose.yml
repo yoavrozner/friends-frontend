@@ -1,7 +1,6 @@
 version: "3.3"
 
 services:
-
   friends-frontend:
       build: .
       image: friends-frontend
@@ -17,9 +16,9 @@ services:
     environment:
       SERVICES: api
       PORT: 8080
-    depends_on:
-      - authentication-service
-      - nats
+    # depends_on:
+    #   - authentication-service
+    #   - nats
     networks:
       - internal
       - default
@@ -30,8 +29,8 @@ services:
     env_file: docker-compose.env
     environment:
       SERVICES: user
-    depends_on: 
-      - nats
+    # depends_on: 
+    #   - nats
     networks: 
       - internal
       - default
@@ -42,8 +41,8 @@ services:
     environment:
       AD_SERVICE_DNS: EXAMPLE
       SERVICES: ad
-    depends_on: 
-      -  nats
+    # depends_on: 
+    #   -  nats
     networks:
       - internal
       - default
@@ -53,8 +52,9 @@ services:
     env_file: docker-compose.env
     environment:
       SERVICES: groupId
-    depends_on: 
-      -  nats
+    # depends_on:
+    #   - mongo
+    #   -  nats
     networks:
       - internal
       - default
@@ -64,9 +64,9 @@ services:
     env_file: docker-compose.env
     environment:
       SERVICES: create
-    depends_on:
-      - mongo
-      - nats
+    # depends_on:
+    #   - mongo
+    #   - nats
     networks:
       - internal
       - default
@@ -76,9 +76,9 @@ services:
     env_file: docker-compose.env
     environment:
       SERVICES: join
-    depends_on:
-      - mongo
-      - nats
+    # depends_on:
+    #   - mongo
+    #   - nats
     networks:
       - internal
       - default
@@ -88,27 +88,9 @@ services:
     env_file: docker-compose.env
     environment:
       SERVICES: owner
-    depends_on:
-      - outgoing-proxy-service
-      - nats
-    networks:
-      - internal
-      - default
-
-  mailer-service:
-    container_name: mailer-service
-    image: "friends.azurecr.io/mailer-service:latest"
-    ports:
-      - "8000:8000"
-    environment:
-      NODE_TLS_REJECT_UNAUTHORIZED: 0
-      USE_REDIS: "false"
-      USE_AUTH: "false"
-      MAIL_HOSTS: "smtp.ethereal.email,smtp.ethereal.email,smtp.ethereal.email,smtp.ethereal.email,smtp.ethereal.email"
-      MAIL_USER: selina.mayert92@ethereal.email
-      MAIL_PASS: Mdb6ruZm3TPG7Z6Y28
-      MAILER_PORT: 25
-      HTTP_SERVER_PORT: 8000
+    # depends_on:
+    #   - outgoing-proxy-service
+    #   - nats
     networks:
       - internal
       - default
@@ -118,63 +100,13 @@ services:
     env_file: docker-compose.env
     environment:
       SERVICES: mail-builder
-    depends_on:
-      - mailer-service
-      - nats
+    # depends_on:
+    #   - mailer-service
+    #   - nats
     networks:
       - internal
       - default
 
-  mongo:
-    image: mongo:4
-    volumes:
-      - data:/data/db
-    networks:
-      - internal
-      - default
-
-  nats:
-    image: nats:2
-    networks:
-      - internal
-      - default
-  
-  redis:
-    image: redis:latest
-    networks:
-      - internal
-      - default
-
-  outgoing-proxy-service:
-    image: friends.azurecr.io/spike-proxy-service
-    environment:
-      MODE: outgoing
-      PORT: 8010
-      SPIKE_REDIS_HOST: redis://redis
-      SPIKE_CLIENT_ID: aXzoxtIFbLVjebyr0~ppCQFxfsv3ZLNkHBrkyfhz
-      SPIKE_CLIENT_SECRET: XUneSMVVJhsGfmVPjjGzZgySdH4hmrNKbXGn5Iupjc68R361v_MuRy_XzBOeCnm3dSNWNU_JBsbWUus7UyVXmvj4cO0GW7am11Ex
-      SPIKE_URL: https://ospike.northeurope.cloudapp.azure.com/oauAth2/token
-      TOKEN_GRANT_TYPE: client_credentials
-      USE_REDIS: 'true'
-      OUTGOING_SERVICES: '[{"route":"/kartoffel/*","pathRewrite":{"^/kartoffel":""},"target":"http://kartoffel-master.eastus.cloudapp.azure.com:3001","audience":"kartoffel"}]'
-    ports:
-      - 8010:8000
-    networks:
-      - internal
-      - default
-
-  authentication-service:
-    image: friends.azurecr.io/authentication-service
-    env_file: docker-compose.env
-    environment:
-      PORT: 8004
-    ports:
-      - '8004:8004'
-    networks:
-      - internal
-      - default
-    
-      
 networks:
   internal:
 

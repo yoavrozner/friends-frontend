@@ -29,8 +29,9 @@ const actions = {
   },
   async fetchMyGroups({ commit, dispatch }) {
     try {
+      console.log("fetchMyGroups");
       const myGroups = await groupApi.getUserGroups();
-
+console.log("myGroups",myGroups);
       commit("setMyGroups", myGroups);
     } catch (err) {
       dispatch("onError", err);
