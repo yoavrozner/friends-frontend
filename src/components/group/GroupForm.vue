@@ -69,7 +69,8 @@ export default {
       hierarchy: "",
       groupTypes: [
         { label: this.$t("distributionGroups.name"), value: GroupTypeEnum.distribution },
-        { label: this.$t("securityGroups.name"), value: GroupTypeEnum.security },
+        // If you want to return security group just cancel the comment on this line.
+        // { label: this.$t("securityGroups.name"), value: GroupTypeEnum.security },
       ],
       classificationTypes: Object.values(this.$t("group.classification.options")),
       type: undefined,

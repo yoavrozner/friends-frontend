@@ -15,17 +15,17 @@ export async function searchGroups(partialName) {
     return res.data;
   };
 
-  const searchSecurityGroups = async (partialName) => {
-    const res = await Axios.get(
-      `${baseURL}/api/ad/groups/security?partialName=${partialName}`
-    );
-    return res.data;
-  };
+  // const searchSecurityGroups = async (partialName) => {
+  //   const res = await Axios.get(
+  //     `${baseURL}/api/ad/groups/security?partialName=${partialName}`
+  //   );
+  //   return res.data;
+  // };
 
   try {
     const [distributionGroups, securityGroups] = await Promise.all([
       searchDistributionGroups(partialName),
-      searchSecurityGroups(partialName),
+      // searchSecurityGroups(partialName),
     ]);
     const groups = [...distributionGroups, ...securityGroups];
     groups.map((group) => formatGroup(group));
