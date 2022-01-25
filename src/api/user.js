@@ -92,6 +92,9 @@ export async function searchApproverByName(groupType, name) {
     const res = await Axios.get(`${baseURL}/api/users/approvers/${groupType}`, {
       params: { partialName: name },
     });
+    console.log('res.data',res.data)
+    console.log('store.state.auth.user.id',store.state.auth.user.id)
+    console.log('process.env.USE_NOCK',process.env.USE_NOCK)
     const users = res.data
       ? res.data.filter((user) => {
         return user.id !== store.state.auth.user.id;
