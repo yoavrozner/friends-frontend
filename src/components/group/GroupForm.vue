@@ -105,7 +105,9 @@ export default {
   },
   methods: {
     isCompleteDisabled() {
-      return !this.valid || this.checkValidationMembers() != null || !this.isGroupNameValid || !this.selectedApprovals;
+    console.log('isCompleteDisabled')
+    console.log(this.valid , this.checkValidationMembers() , this.isGroupNameValid , this.selectedApprovals)
+      return !this.valid || this.checkValidationMembers() != null || !this.isGroupNameValid || this.selectedApprovals.length===0;
     },
     checkValidation() {
       return this.isGroupNameValid ? null : this.$t("group.create.groupNameAlreadyExists");
