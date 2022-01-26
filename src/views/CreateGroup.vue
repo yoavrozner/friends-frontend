@@ -32,10 +32,7 @@ export default {
       try {
         console.log(group);
         const res = await createApi.createGroupRequest({
-          approverId: group.approver[0] || {
-            sAMAccountName: this.user.email.split('@')[0],
-            displayName: `- ${this.user.name.firstName} ${this.user.name.lastName}`,
-          },
+          approverId: group.approver,
           groupName: group.groupName,
           hierarchy: group.hierarchy,
           type: group.type,

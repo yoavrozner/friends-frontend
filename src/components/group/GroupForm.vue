@@ -196,7 +196,7 @@ export default {
         classification: this.classification,
         displayName: `${this.hierarchy}/${this.displayName}`,
         members: this.members,
-        approver: (this.isApprover || this.isSuper) ? [this.user.id] : this.selectedApprovals,
+        approver: (this.isApprover || this.isSuper) ? this.user.id : this.selectedApprovals[0].id,
       };
 
       if (this.isSecurityGroup()) {
