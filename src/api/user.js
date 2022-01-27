@@ -100,8 +100,7 @@ export async function searchApproverByName(groupType, name) {
         return user.id !== store.state.auth.user.id;
       })
       : [];
-      users.map((user) => formatKartoffelUser(user));
-    return users;
+     return Promise.all(users.map((user) => formatKartoffelUser(user)));
   } catch (error) {
     store.dispatch("onError", error);
   }
