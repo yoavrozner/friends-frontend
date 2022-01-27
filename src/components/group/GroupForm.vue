@@ -150,15 +150,20 @@ export default {
         })
         .finally(() => (this.isUsersLoading = false));
     },
-    getApproversByName(name) {
+    async getApproversByName(name) {
       if (this.isApproversLoading) return;
       this.isApproversLoading = true;
-      usersApi
-        .searchApproverByName(this.isSecurityGroup() ? "security": "distribution", name)
-        .then((approvers) => {
-          this.approvers = approvers;
-        })
-        .finally(() => (this.isApproversLoading = false));
+      try{
+        const approversByName = await usersApi.searchApproverByName(this.isSecurityGroup() ? "security": "distribution", name);
+        this.approvers = approversByName;
+        console.log('user.api return', approversByName);
+        console.log("this.approvers", this.approvers);
+      } catch(err){
+        console.error('error getting approver by name', err);
+        throw new Error(err);
+      } finally{
+        this.isApproversLoading = false;
+      }
     },
     onUserSelect(user) {
       this.users = [];
