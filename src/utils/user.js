@@ -2,7 +2,7 @@ import store from '@/store';
 
 export function formatKartoffelUser(user) {
   const formatedUser = user;
-  formatedUser.displayName = `${user.firstName} ${user.lastName ? user.lastName : ""} > ${user.hierarchy.join('/')}`;
+  formatedUser.displayName = `${user.firstName ? user.firstName : ''} ${user.lastName ? user.lastName : ''} > ${user.hierarchy ? user.hierarchy.join('/') : '' }`;
   return formatedUser;
 }
 
