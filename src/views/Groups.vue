@@ -86,8 +86,9 @@ export default {
             if(fullMember){
               return { sAMAccountName: fullMember.sAMAccountName, displayName: `${fullMember.firstName} ${fullMember.lastName}` };
             }
-            
+            return { sAMAccountName: member, displayName: '' };
           }
+          return member;
         })
       );
 
