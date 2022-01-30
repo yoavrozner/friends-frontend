@@ -34,7 +34,7 @@ export async function createGroupRequest({
         classification,
         type,
         hierarchy: hierarchy ? hierarchy : "" + displayName,
-        members: members ? members.join(';') : [],
+        members: members ? members : [],
         owner
       }
     };
