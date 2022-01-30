@@ -32,6 +32,7 @@
 
 <script>
 import * as groupsApi from "@/api/group";
+import { getUserByDomainUser } from "@/api/user";
 
 import Header from "@/components/common/text/Header";
 import Search from "@/components/common/inputs/Search";
@@ -74,7 +75,22 @@ export default {
     async onGroupClick(id) {
       console.log(id);
       const group = await this.getGroup(id);
-      console.log(group)
+      console.log(group);
+
+      // This ensures each member has sAMAccountName and displayName.
+      // It would be better to save it this way in the ad. Therefore it is temporary.
+      group.members = await Promise.all(
+        group.members.map(async (member) => {
+          if (typeof member === 'string' && member[0] === 'T') {
+            const fullMember = await getUserByDomainUser(member);
+            if(fullMember){
+              return { sAMAccountName: fullMember.sAMAccountName, displayName: `${fullMember.firstName} ${fullMember.lastName}` };
+            }
+            
+          }
+        })
+      );
+
       this.$refs.groupDetails.open(group);
     },
     onClear() {

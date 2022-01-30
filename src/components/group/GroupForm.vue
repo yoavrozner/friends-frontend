@@ -201,7 +201,7 @@ export default {
         type: this.type,
         classification: this.classification,
         displayName: `${this.hierarchy}/${this.displayName}`,
-        members: this.selectedUsers,
+        members: this.selectedUsers.map(member => member.id),
         approver: (this.isApprover || this.isSuper) ? this.user.id : this.selectedApprovals[0].id,
       };
 
