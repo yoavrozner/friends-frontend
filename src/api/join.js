@@ -34,7 +34,7 @@ export async function createJoinRequest(groupId, approverId, joinReason) {
       joinReason,
       type: groupType,
       displayName: group.displayName,
-      approver: user.fullName,
+      approver: user.id,
     });
     return res.data;
   } catch (error) {
