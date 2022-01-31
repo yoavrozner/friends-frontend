@@ -84,7 +84,7 @@ export default {
           if (typeof member === 'string' && member[0] === 'T') {
             const fullMember = await getUserByDomainUser(member);
             if(fullMember){
-              return { sAMAccountName: fullMember.sAMAccountName, displayName: `${fullMember.firstName} ${fullMember.lastName}` };
+              return { sAMAccountName: member, displayName: `${fullMember.firstName} ${fullMember.lastName}` };
             }
             return { sAMAccountName: member, displayName: '' };
           }
