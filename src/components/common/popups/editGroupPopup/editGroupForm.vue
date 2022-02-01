@@ -10,6 +10,8 @@
         :rules="displayNameRules"
         :reset="resetDisplayName"
       />
+      <!-- This should be the FRDIS instead of actual. -->
+      <!-- Remains to be seen if the user should be able to change -->
       <FormInput
         :label="$t('group.sAMAccountName')"
         :placeholder="$t('namePlaceholder')"
@@ -81,7 +83,7 @@
 </template>
 
 <script>
-import * as joinApi from "@/api/join";
+// import * as joinApi from "@/api/join";
 import * as usersApi from "@/api/user";
 import * as groupApi from "@/api/group";
 import debounce from "lodash/debounce";
@@ -123,7 +125,7 @@ export default {
       displayNameRules: [
         (v) => !!v || this.$t("group.create.required"),
         (v) =>
-          v.length <= this.limitDisplayName ||
+          v.split('/')[v.split('/').length - 1].length <= this.limitDisplayName ||
           this.$t("group.create.displayNameLimit"),
       ],
     };
@@ -183,7 +185,8 @@ export default {
       this.$refs.notePopup.open(item);
     },
     onMemberAddComplete(request) {
-      joinApi.approveJoinRequest(request.id);
+      console.log("onMemberAddComplete ", request);
+      groupApi.addGroupMember(this.group.id, this.selectedUsers);
     },
     onEdit() {
       this.edit = true;
@@ -228,19 +231,22 @@ export default {
         })
         .finally(() => (this.isLoading = false));
     },
+    isUserExists(users, id) {
+      return users.some((user) => user.id === id);
+    },
     onUserSelect(user) {
       this.users = [];
       if (!user) return;
       else if (this.isUserExists(this.selectedUsers, user.id))
         this.remove(user);
-      else this.selectedUsers.push(user);
+      else this.selectedUsers.push(user.sAMAccountName);
     },
     onOwnerSelect(user) {
       this.users = [];
       if (!user) return;
       else if (this.isUserExists(this.selectedUsers, user.id))
         this.remove(user);
-      else this.selectedUsers = [user];
+      else this.owner = user.sAMAccountName;
     },
     onUserRemove(item) {
       this.selectedUsers = this.selectedUsers.filter((user) => {

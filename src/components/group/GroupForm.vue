@@ -200,7 +200,7 @@ export default {
         hierarchy: this.hierarchy,
         type: this.type,
         classification: this.classification,
-        displayName: `${this.hierarchy}/${this.displayName}`,
+        displayName: `${this.hierarchy}/${this.displayName.replace('/', '')}`,
         members: this.selectedUsers.map(member => member.id),
         approver: (this.isApprover || this.isSuper) ? this.user.id : this.selectedApprovals[0].id,
       };
