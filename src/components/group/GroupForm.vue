@@ -196,11 +196,12 @@ export default {
       return users.some((user) => user.id === id);
     },
     onComplete() {
+      const groupDisplayName = this.hierarchy ? `${this.hierarchy}/${this.displayName}` : this.displayName;
       const group = {
         hierarchy: this.hierarchy,
         type: this.type,
         classification: this.classification,
-        displayName: `${this.hierarchy}/${this.displayName.replace('/', '')}`,
+        displayName: groupDisplayName,
         members: this.selectedUsers.map(member => member.id),
         approver: (this.isApprover || this.isSuper) ? this.user.id : this.selectedApprovals[0].id,
       };

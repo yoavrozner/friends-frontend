@@ -142,8 +142,10 @@ export async function addGroupMember(groupId, users) {
 export async function deleteGroupMember(groupId, users) {
   try {
     const res = await Axios.delete(`${baseURL}/api/ad/group/users`, {
-      groupId,
-      users,
+      data: {
+        groupId,
+        users,
+      },
     });
     return res.data;
   } catch (error) {
