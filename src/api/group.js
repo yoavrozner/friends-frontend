@@ -124,6 +124,8 @@ export async function updateGroupName(groupId, name) {
  * */
 export async function addGroupMember(groupId, users) {
   try {
+    if(!Array.isArray(users)) users = [users];
+
     const res = await Axios.put(`${baseURL}/api/ad/group/users`, {
       groupId,
       users,
@@ -141,6 +143,8 @@ export async function addGroupMember(groupId, users) {
  * */
 export async function deleteGroupMember(groupId, users) {
   try {
+    if(!Array.isArray(users)) users = [users];
+
     const res = await Axios.delete(`${baseURL}/api/ad/group/users`, {
       data: {
         groupId,
